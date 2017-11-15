@@ -48,7 +48,7 @@ nines=0
 tens=0
 
 length = 2000
-start = 1000
+start = 4000
 for i in range(start,start+length):
 	x  =linecache.getline("HMC_X.dat",1+i)
 	x   = x.split(" ")
