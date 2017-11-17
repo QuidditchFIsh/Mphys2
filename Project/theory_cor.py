@@ -2,7 +2,7 @@ import math
 from numpy import *
 import numpy as np
 
-mu2 = 1
+mu2 = 2
 a  = 1
 
 omega = sqrt(mu2*(1+(a*a*mu2)/(4)))

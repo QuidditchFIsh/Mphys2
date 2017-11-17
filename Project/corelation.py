@@ -143,17 +143,17 @@ for i in range(start,start+length):
 	nine=0
 	ten=0
 
-data.append((sum1/length))
-data.append((sum2/length))
-data.append((sum3/length))
-data.append((sum4/length))
-data.append((sum5/length))
-data.append((sum6/length))
-data.append((sum7/length))
-data.append((sum8/length))
-data.append((sum9/length))
-data.append((sum10/length))
-data.append((sum11/length))
+data.append((sum1/sum1))
+data.append((sum2/sum1))
+data.append((sum3/sum1))
+data.append((sum4/sum1))
+data.append((sum5/sum1))
+data.append((sum6/sum1))
+data.append((sum7/sum1))
+data.append((sum8/sum1))
+data.append((sum9/sum1))
+data.append((sum10/sum1))
+data.append((sum11/sum1))
 
 print(data)
 plt.plot(data)

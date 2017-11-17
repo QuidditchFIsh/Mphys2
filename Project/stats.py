@@ -7,6 +7,15 @@ from array import *
 import math
 from matplotlib import gridspec
 
+def estimated_autocorrelation(x):
+	timeseries = x
+	mean = np.mean(timeseries)
+	timeseries -= np.mean(timeseries)
+	autocorr_f = np.correlate(timeseries, timeseries, mode='full')
+	#temp = autocorr_f[autocorr_f.size/2:]
+	return autocorr_f
+
+
 #initalise arrays and variables
 avgx=[];avgx2=[];action=[];KE=[];delta_h=[];i=[];avgx4=[];jjj=[]
 Mavgx=[];Mavgx2=[];Maction=[];MKE=[];Mdelta_h=[];Mavgx4=[]
@@ -67,6 +76,13 @@ for j in range(rm,len(i)):
 
 del avgx2err[:rm]
 
+test=estimated_autocorrelation(avgx)
+var = np.var(avgx)
+print(test[10000]/test[10000])
+print(test[10001]/test[10000])
+print(test[10002]/test[10000])
+print(test[10003]/test[10000])
+print(test[10004]/test[10000])
 
 iter =len(i)
 length=2000
@@ -89,9 +105,9 @@ std1=[]
 std2=[]
 l=7
 for j in range(0,l):
-	for i in range(1000,iter-j):
+	for i in range(4000,iter-j):
 		temp1=(avgx[i]-mean)*(avgx[i+j]-mean)
-		sum += temp1
+		sum += (temp1)
 		std1.append(temp1)
 		temp1=(avgx[i]-mean)**2
 		std2.append(temp1)
@@ -113,7 +129,7 @@ plt.title("AutoCorelation of <x^2>")
 plt.xlabel("t")
 plt.ylabel("Autocorelation Function")
 #plt.errorbar(x,data,yerr=error,ecolor='g')
-plt.plot(data)
+plt.plot(test)
 #plt.yscale('log')
 plt.show()
 
@@ -126,7 +142,7 @@ gx2=plt.subplot(gs1[0])
 plt.title('Average X')
 plt.ylabel('<X>')
 #gx2.axhline(y=0.0,lw=1,color='red',label='Theoretical AvgX')
-gx2.plot(avgx,label='Simulated AvgX')
+gx2.plot(Mavgx,label='Simulated AvgX')
 #gx2.set_ylim([-0.01,0.01])
 plt.legend(loc='lower right')
 

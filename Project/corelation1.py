@@ -14,7 +14,7 @@ avgx=0
 avgx1=0
 avgx2=0
 var1=0
-for j in range(0,9000):
+for j in range(1,9000):
 	x  =linecache.getline("HMC_X.dat",1+j)
 	x   = x.split(" ")
 	del x   [-1]

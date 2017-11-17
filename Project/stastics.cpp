@@ -6,7 +6,7 @@
 */
 
 #include "stastics.h"
-#define Stats_Flip 1
+#define Stats_Flip 0
 //1 = Harmonic
 //0 = Anharmonic
 
@@ -87,7 +87,7 @@ double error_Bars(vector<double> results)
 
 }
 
-double lattice_Hamiltonian(vector<vector<double> > state,unsigned int length,double mu,double lamba)
+double lattice_Hamiltonian(vector<vector<double> > state,unsigned int length,double mu,double lamba,double m,double a)
 {
 	double H=0;
 	//loop for all sites which are not effected by periodic BC's
@@ -95,44 +95,44 @@ double lattice_Hamiltonian(vector<vector<double> > state,unsigned int length,dou
 	
 	for(unsigned int i=0;i<length-1;i++)
 	{
-		H += Harmonic_hamiltonian(state[0][i],state[1][i],state[1][i+1],mu);
+		H += Harmonic_hamiltonian(state[0][i],state[1][i],state[1][i+1],mu,m,a);
 	}
 	//Periodic BC sites
-	H += Harmonic_hamiltonian(state[0][length-1],state[1][length-1],state[1][0],mu);
+	H += Harmonic_hamiltonian(state[0][length-1],state[1][length-1],state[1][0],mu,m,a);
 
 #endif
 
 #if !Stats_Flip
 	for(unsigned int i=0;i<length-1;i++)
 	{
-		H += Anarmonic_hamiltonian(state[0][i],state[1][i],state[1][i+1],mu,lamba);
+		H += Anarmonic_hamiltonian(state[0][i],state[1][i],state[1][i+1],mu,lamba,m,a);
 	}
 	//Periodic BC sites
-	H += Anarmonic_hamiltonian(state[0][length-1],state[1][length-1],state[1][0],mu,lamba);
+	H += Anarmonic_hamiltonian(state[0][length-1],state[1][length-1],state[1][0],mu,lamba,m,a);
 #endif
 
 	return H;
 
 }
-double lattice_Action(vector<double> q,unsigned int length)
+double lattice_Action(vector<double> q,unsigned int length,double m,double a,double mu,double lamba)
 {
 	double S = 0;
 #if Stats_Flip
 	for(unsigned int i =0; i<length-1;i++)
 	{
-		S += Harmonic_action(q[i],q[i+1]);
+		S += Harmonic_action(q[i],q[i+1],m,a,mu);
 	}
 
-	S += Harmonic_action(q[length-1],q[0]);
+	S += Harmonic_action(q[length-1],q[0],m,a,mu);
 #endif
 
 #if !Stats_Flip
 	for(unsigned int i =0; i<length-1;i++)
 	{
-		S += Anarmonic_action(q[i],q[i+1]);
+		S += Anarmonic_action(q[i],q[i+1],m,a,mu,lamba);
 	}
 
-	S += Anarmonic_action(q[length-1],q[0]);
+	S += Anarmonic_action(q[length-1],q[0],m,a,mu,lamba);
 #endif
 
 	return S/(double)length;
@@ -151,26 +151,26 @@ double lattice_KineticEnergy(vector<double> p,unsigned int length)
 }
 
 
-double Harmonic_hamiltonian(double p,double q,double q_plus,double mu)
+double Harmonic_hamiltonian(double p,double q,double q_plus,double mu,double m,double a)
 {
-	return (p*p*0.5) + ((pow((q_plus - q),2)*0.5) + (mu*0.5*q*q));
+	return (p*p*0.5*(1/m)) + ((pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q));
 }
 
-double Harmonic_action(double q, double q_plus)
+double Harmonic_action(double q, double q_plus,double m,double a,double mu)
 {
-	return ((pow((q_plus - q),2)*0.5) + (0.5*q*q));
+	return ((pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q));
 }
-double Anarmonic_hamiltonian(double p,double q,double q_plus,double mu,double lamba)
+double Anarmonic_hamiltonian(double p,double q,double q_plus,double mu,double lamba,double m,double a)
 {
-	return (p*p*0.5) + (pow((q_plus - q),2)*0.5) + (mu*0.5*q*q) + (lamba*pow(q,4));
-	//return (p*p*0.5) + (pow((q_plus - q),2)*0.5) + (pow((q*q) - 0,2));
+	return (p*p*(0.5/m)) + (pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q) + (a*lamba*pow(q,4));
+	//return (p*p*(0.5/m)) + (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * pow((q*q) - 0,2));
 	//return (p*p*0.5) + 1*(pow((q*q) - 0,2));
 }
 
-double Anarmonic_action(double q, double q_plus)
+double Anarmonic_action(double q, double q_plus,double m,double a,double mu,double lamba)
 {
-	return (0.5*pow((q_plus - q),2) + (0 * pow(q,2)) + (1*pow(q,4)));
-	//return (0.5*pow((q_plus - q),2) + (1*pow((q*q) + 1,2)));
+	return (pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q) + (a*lamba*pow(q,4));
+	//return (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * pow((q*q) - 0,2));
 	//return  1*(pow((q*q) - 0,2));
 }
 double kinetic_Energy(double p)
