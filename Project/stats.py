@@ -131,7 +131,7 @@ plt.ylabel("Autocorelation Function")
 #plt.errorbar(x,data,yerr=error,ecolor='g')
 plt.plot(test)
 #plt.yscale('log')
-plt.show()
+#plt.show()
 
 
 po=[]

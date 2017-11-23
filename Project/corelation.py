@@ -53,82 +53,85 @@ for i in range(start,start+length):
 	x  =linecache.getline("HMC_X.dat",1+i)
 	x   = x.split(" ")
 	del x   [-1]
-	x    = [float(a) for a in x   ]
+	xn    = [float(a) for a in x   ]
 
 	y  =linecache.getline("HMC_X.dat",2+i)
 	y   = y.split(" ")
 	del y   [-1]
-	y    = [float(b) for b in y   ]
+	yn    = [float(b) for b in y   ]
 
 	z  =linecache.getline("HMC_X.dat",3+i)
 	z   = z.split(" ")
 	del z   [-1]
-	z    = [float(b) for b in z   ]
+	zn    = [float(b) for b in z   ]
 
 	aa  =linecache.getline("HMC_X.dat",4+i)
 	aa   = aa.split(" ")
 	del aa   [-1]
-	aa    = [float(aaa) for aaa in aa   ]
+	aan    = [float(aaa) for aaa in aa   ]
 
 	b1  =linecache.getline("HMC_X.dat",5+i)
 	b1  = b1.split(" ")
 	del b1   [-1]
-	b1    = [float(bb) for bb in b1   ]
+	b1n    = [float(bb) for bb in b1   ]
 
 	c1  =linecache.getline("HMC_X.dat",6+i)
 	c1   = c1.split(" ")
 	del c1   [-1]
-	c1    = [float(b1) for b1 in c1   ]
+	c1n    = [float(b1) for b1 in c1   ]
 
 	z1  =linecache.getline("HMC_X.dat",7+i)
 	z1   = z1.split(" ")
 	del z1   [-1]
-	z1    = [float(b) for b in z1   ]
+	z1n    = [float(b) for b in z1   ]
 
 	aa1  =linecache.getline("HMC_X.dat",8+i)
 	aa1   = aa1.split(" ")
 	del aa1   [-1]
-	aa1    = [float(aaa) for aaa in aa1   ]
+	aa1n    = [float(aaa) for aaa in aa1   ]
 
 	b11  =linecache.getline("HMC_X.dat",9+i)
 	b11  = b11.split(" ")
 	del b11   [-1]
-	b11    = [float(bb) for bb in b11   ]
+	b11n    = [float(bb) for bb in b11   ]
 
 	c11  =linecache.getline("HMC_X.dat",10+i)
 	c11   = c11.split(" ")
 	del c11   [-1]
-	c11    = [float(b1) for b1 in c11   ]
+	c11n    = [float(b1) for b1 in c11   ]
 
 	c12  =linecache.getline("HMC_X.dat",11+i)
 	c12   = c12.split(" ")
 	del c12   [-1]
-	c12    = [float(b1) for b1 in c12   ]
+	c12n    = [float(b1) for b1 in c12   ]
 
-	for i in range(0,len(x)):
-		zero +=x[i]*x[i]
-		one+=x[i]*y[i]
-		two +=x[i]*z[i]
-		three +=x[i]*aa[i]
-		four +=x[i]*b1[i]
-		five +=x[i]*c1[i]
-		six +=z1[i] *x[i]
-		seven +=aa1[i] *x[i]
-		eight +=b11[i] *x[i]
-		nine +=c11[i] *x[i]
-		ten +=c12[i] *x[i]
 
-	sum1+=(zero/len(x))
-	sum2+=(one/len(x))
-	sum3+=(two/(len(x)))
-	sum4+=(three/(len(x)))
-	sum5+=(four/(len(x)))
-	sum6+=(five/(len(x)))
-	sum7+=(six/(len(x)))
-	sum8+=(seven/(len(x)))
-	sum9+=(eight/(len(x)))
-	sum10+=(nine/len(x))
-	sum11+=(ten/len(x))
+
+
+	for i in range(0,len(x)-10):
+		zero +=xn[i]*xn[i]
+		one+=xn[i]*xn[i+1]
+		two +=xn[i]*xn[i+2]
+		three +=xn[i]*xn[i+3]
+		four +=xn[i]*xn[i+4]
+		five +=xn[i]*xn[i+5]
+		six +=xn[i] *xn[i+6]
+		seven +=xn[i] *xn[i+7]
+		eight +=xn[i] *xn[i+8]
+		nine +=xn[i] *xn[i+9]
+		ten +=xn[i] *xn[i+10]
+
+	sum1+=(zero/(len(x)-10))
+	sum2+=(one/(len(x)-10))
+	sum3+=(two/(len(x)-10))
+	sum4+=(three/(len(x)-10))
+	sum5+=(four/(len(x)-10))
+	sum6+=(five/(len(x)-10))
+	sum7+=(six/(len(x)-10))
+	sum8+=(seven/(len(x)-10))
+	sum9+=(eight/(len(x)-10))
+	sum10+=(nine/(len(x)-10))
+	sum11+=(ten/(len(x)-10))
 
 
 	one=0
@@ -161,10 +164,10 @@ plt.plot(data)
 plt.show()
 
 
-
-
-
 '''
+
+
+
 	zeros+=(zero/zero)
 	ones+=(one/zero)
 	twos+=(two/zero)

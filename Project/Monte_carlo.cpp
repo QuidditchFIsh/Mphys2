@@ -5,7 +5,7 @@
 	housed here and will be executed here and all of the stats functions will be executed here to create the Raw stats data.
 */
 #include "Monte_carlo.h"
-#define Oscillator_flip 0
+#define Oscillator_flip 1
 //1 = Harmonic
 //0 = Anharmonic
 #define anharmonic_flip 1
@@ -57,17 +57,17 @@ printf("\n");
  	//run main algorithm
  	for(unsigned int i = 0; i<iterations;i++)
  	{
- 		//default_random_engine generator(random_device{}());
+ 		default_random_engine generator(random_device{}());
  		for(unsigned int j = 0; j<length;j++)
  		{
- 			//State[0][j] = distribution(generator);
+ 			State[0][j] = distribution(generator);
  			//State[0][j] = 1;
  			
  			 if(i==0)
  			 {
  			 	//first_state[1][j]=State[1][j];
- 			 	//State[1][j] = Udistribution(generator);
- 			 	State[1][j] = 1;
+ 			 	State[1][j] = Udistribution(generator);
+ 			 	//State[1][j] = 1;
  			 }
  		}
 #if Oscillator_flip 
@@ -137,9 +137,9 @@ printf("\n");
  		}
  		for(unsigned int l=0;l<length;l++)
 		{
- 			//fprintf(output_X,"%f ",State[1][l]);
+ 			fprintf(output_X,"%f ",State[1][l]);
  		}
- 	//	fprintf(output_X,"\n");
+ 		fprintf(output_X,"\n");
 
  	}
 
