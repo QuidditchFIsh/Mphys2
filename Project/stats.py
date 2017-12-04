@@ -39,7 +39,7 @@ for line in file:
 	delta_h.append(float(c))
 	#avgx4.append(float(c))
 
-data=np.genfromtxt("HMC_X.dat", unpack=True)
+dataX=np.genfromtxt("HMC_X1.dat", unpack=True)
 #print(data)
 
 #stats calculations
@@ -78,17 +78,18 @@ del avgx2err[:rm]
 
 test=estimated_autocorrelation(avgx)
 var = np.var(avgx)
-print(test[10000]/test[10000])
-print(test[10001]/test[10000])
-print(test[10002]/test[10000])
-print(test[10003]/test[10000])
-print(test[10004]/test[10000])
+#print(test[10000]/test[10000])
+#print(test[10001]/test[10000])
+#print(test[10002]/test[10000])
+#print(test[10003]/test[10000])
+#print(test[10004]/test[10000])
 
 iter =len(i)
 length=2000
 mu=1
 f=1
 oscillator_flip=1
+'''
 #1=harmonic,0=anharmonic
 #print(Mavgx2)
 #print(Mavgx2[-1])
@@ -154,7 +155,7 @@ if(oscillator_flip==1):
 	g.savefig("graphs/Average_X_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	g.savefig("graphs/Average_X_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
-'''
+
 
 
 
@@ -233,12 +234,13 @@ if(oscillator_flip==1):
 	m.savefig("graphs/Average_DeltaH_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	m.savefig("graphs/Average_DeltaH_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
-
+'''
 n=plt.figure()
-#x = np.linspace(-2,2,100) # 100 linearly spaced numbers
-#y = (1/(3.141**0.5))*np.exp(-x**2)
-#out1 = plt.plot(x,y)
-out = plt.hist(data,bins=200,normed=1)
+w = 1.00124922
+x = np.linspace(-3,3,200) # 100 linearly spaced numbers
+y = ((w/(3.141592654))**0.5)*np.exp(-w*(x**2))
+plt.plot(x,y)
+plt.hist(dataX,bins=100,normed=1)
 plt.xlabel("x")
 plt.ylabel("|psi|^2")
 plt.title("Anharmonic Wavefunction for mu=-4 lamba =0.1")
@@ -246,16 +248,3 @@ if(oscillator_flip==1):
 	n.savefig("graphs/Average_Wavefunction_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	n.savefig("graphs/Average_Wavefunction_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
-'''
-
-
-
-
-
-
-
-
-
-
-
-
