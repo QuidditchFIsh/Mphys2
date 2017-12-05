@@ -47,25 +47,25 @@ rm=0
 for j in range(rm,len(i)):
 	sum1 += avgx[j]
 	sum2 += avgx2[j]
-	#sum3 += action[j]
-	#sum4 += KE[j]
-	#sum5 += delta_h[j]
+	sum3 += action[j]
+	sum4 += KE[j]
+	sum5 += delta_h[j]
 	#sum5 += avgx4[j]
 
 	
-	#sum12 += avgx[j] * avgx[j]
-	##sum22 += avgx2[j] * avgx2[j]
-	#sum32 += action[j] * action[j]
-	#sum42 += KE[j] * KE[j]
-	#sum52 += delta_h[j] * delta_h[j]
+	sum12 += avgx[j] * avgx[j]
+	sum22 += avgx2[j] * avgx2[j]
+	sum32 += action[j] * action[j]
+	sum42 += KE[j] * KE[j]
+	sum52 += delta_h[j] * delta_h[j]
 
 	k=j+1-rm
 	Mavgx.append(sum1/k)
 	Mavgx2.append(sum2/k)
-	#Maction.append(sum3/k)
-	#MKE.append(sum4/k)
-	#Mdelta_h.append((sum5/k))
-	#Mavgx4.append(sum5/k)
+	Maction.append(sum3/k)
+	MKE.append(sum4/k)
+	Mdelta_h.append((sum5/k))
+	Mavgx4.append(sum5/k)
 
 
 #	avgxerr.append(sqrt((sum12/k)-(sum1*sum1/(k*k))/k))
@@ -89,7 +89,7 @@ length=2000
 mu=1
 f=1
 oscillator_flip=1
-'''
+
 #1=harmonic,0=anharmonic
 #print(Mavgx2)
 #print(Mavgx2[-1])
@@ -122,15 +122,15 @@ for j in range(0,l):
 	std2=[]
 
 
-x=np.linspace(0,l-1,l)
-print(data)
-print(error)
-print(x)
-plt.title("AutoCorelation of <x^2>")
-plt.xlabel("t")
-plt.ylabel("Autocorelation Function")
+#x=np.linspace(0,l-1,l)
+#print(data)
+#print(error)
+#print(x)
+#plt.title("AutoCorelation of <x^2>")
+#plt.xlabel("t")
+#plt.ylabel("Autocorelation Function")
 #plt.errorbar(x,data,yerr=error,ecolor='g')
-plt.plot(test)
+#plt.plot(test)
 #plt.yscale('log')
 #plt.show()
 
@@ -234,12 +234,12 @@ if(oscillator_flip==1):
 	m.savefig("graphs/Average_DeltaH_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	m.savefig("graphs/Average_DeltaH_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
-'''
+
 n=plt.figure()
-w = 1.00124922
-x = np.linspace(-3,3,200) # 100 linearly spaced numbers
-y = ((w/(3.141592654))**0.5)*np.exp(-w*(x**2))
-plt.plot(x,y)
+#w = 1.00124922
+#x = np.linspace(-3,3,200) # 100 linearly spaced numbers
+#y = ((w/(3.141592654))**0.5)*np.exp(-w*(x**2))
+#plt.plot(x,y)
 plt.hist(dataX,bins=100,normed=1)
 plt.xlabel("x")
 plt.ylabel("|psi|^2")

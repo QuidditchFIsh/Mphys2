@@ -559,4 +559,42 @@ double hmcAlgorithm_Anharmonic(unsigned int length,double t_step,vector<vector<d
 	
 }
 
+ 		printf("Iteration:%d\n\n",i);
+ 		for(int j=0;j<length;j++)
+ 		{
+ 			printf("%f ",State[0][j]);
+ 		}
+ 		printf("\n");
+ 		for(int j=0;j<length;j++)
+ 		{
+ 			printf("%f ",State[1][j]);
+ 		}
+ 		printf("\n\n");
+
+ 		acceptance += hmcAlgorithm_Anharmonic(length,t_step,State,temp_State,H_store,mu,lamba,steps,delta_H_Average,m,a);
+
+ 		for(int j=0;j<length;j++)
+ 		{
+ 			printf("%f ",State[0][j]);
+ 		}
+ 		printf("\n");
+ 		for(int j=0;j<length;j++)
+ 		{
+ 			printf("%f ",State[1][j]);
+ 		}
+ 		printf("\n\n");
+
+ 		acceptance += hmcAlgorithm_Anharmonic(length,-1*t_step,State,temp_State,H_store,mu,lamba,steps,delta_H_Average,m,a);
+
+ 		for(int j=0;j<length;j++)
+ 		{
+ 			printf("%f ",State[0][j]);
+ 		}
+ 		printf("\n");
+ 		for(int j=0;j<length;j++)
+ 		{
+ 			printf("%f ",State[1][j]);
+ 		}
+ 		printf("\n\n");
+
 
