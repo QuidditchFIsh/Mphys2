@@ -162,13 +162,13 @@ double Harmonic_action(double q, double q_plus,double m,double a,double mu)
 }
 double Anarmonic_hamiltonian(double p,double q,double q_plus ,double mu,double lamba,double m,double a)
 {
-	return (p*p*0.5*(1/m)) + (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * ((q*q)-2)* ((q*q-2)));
+	return (p*p*0.5*(1/m)) + (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * ((q*q)-20)* ((q*q-20)));
 	//return (p*p*0.5*(1/m)) + ((pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba*pow(q,4)) + (a*mu*0.5*pow(q,2)));
 }
 
 double Anarmonic_action(double q, double q_plus,double m,double a,double mu,double lamba)
 {
-	return (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * ((q*q)-2)* ((q*q)-2));
+	return (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * ((q*q)-20)* ((q*q)-20));
 }
 double kinetic_Energy(double p)
 {

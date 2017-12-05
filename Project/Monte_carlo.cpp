@@ -126,7 +126,7 @@ printf("\n");
  	}
  		for(unsigned int l=0;l<length;l++)
 		{
- 			fprintf(output_X1,"%f ",State[1][l]);
+ 			fprintf(output_X1,"%f\n",State[1][l]);
  		}
  		fprintf(output_X1,"\n");
 
@@ -409,7 +409,7 @@ double hmcAlgorithm_Anharmonic(unsigned int length,double t_step,vector<vector<d
 double hmcAlgorithm_Anharmonic(unsigned int length,double t_step,vector<vector<double> > &old_state,vector<vector<double> > &temp_State,vector<double> &H_store,double mu,double lamba,unsigned int steps,double &delta_H_Average,double m,double a)
 {
 	//printf("welp\n");
-	double f=2,H_old=0,H_new=0,H_inter=0,min=0;
+	double f=20,H_old=0,H_new=0,H_inter=0,min=0;
 	H_old=lattice_Hamiltonian(old_state,length,mu,lamba,m,a);
 	
 	//half step in the p
