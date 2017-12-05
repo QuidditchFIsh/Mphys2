@@ -3,14 +3,14 @@ from numpy import *
 import numpy as np
 
 mu2 = 2
-a  = 1
+a  = 0.5
 
 omega = sqrt(mu2*(1+(a*a*mu2)/(4)))
 
 
 R = 1 + (a*a*mu2)/(2) - a*omega
 
-j=3
+j=0
 N=1000
 N_j=N-j
 norm =0

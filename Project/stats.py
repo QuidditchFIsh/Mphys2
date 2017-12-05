@@ -39,7 +39,7 @@ for line in file:
 	delta_h.append(float(c))
 	#avgx4.append(float(c))
 
-data=np.genfromtxt("HMC_X.dat", unpack=True)
+dataX=np.genfromtxt("HMC_X1.dat", unpack=True)
 #print(data)
 
 #stats calculations
@@ -47,25 +47,25 @@ rm=0
 for j in range(rm,len(i)):
 	sum1 += avgx[j]
 	sum2 += avgx2[j]
-	#sum3 += action[j]
-	#sum4 += KE[j]
-	#sum5 += delta_h[j]
+	sum3 += action[j]
+	sum4 += KE[j]
+	sum5 += delta_h[j]
 	#sum5 += avgx4[j]
 
 	
-	#sum12 += avgx[j] * avgx[j]
-	##sum22 += avgx2[j] * avgx2[j]
-	#sum32 += action[j] * action[j]
-	#sum42 += KE[j] * KE[j]
-	#sum52 += delta_h[j] * delta_h[j]
+	sum12 += avgx[j] * avgx[j]
+	sum22 += avgx2[j] * avgx2[j]
+	sum32 += action[j] * action[j]
+	sum42 += KE[j] * KE[j]
+	sum52 += delta_h[j] * delta_h[j]
 
 	k=j+1-rm
 	Mavgx.append(sum1/k)
 	Mavgx2.append(sum2/k)
-	#Maction.append(sum3/k)
-	#MKE.append(sum4/k)
-	#Mdelta_h.append((sum5/k))
-	#Mavgx4.append(sum5/k)
+	Maction.append(sum3/k)
+	MKE.append(sum4/k)
+	Mdelta_h.append((sum5/k))
+	Mavgx4.append(sum5/k)
 
 
 #	avgxerr.append(sqrt((sum12/k)-(sum1*sum1/(k*k))/k))
@@ -78,17 +78,18 @@ del avgx2err[:rm]
 
 test=estimated_autocorrelation(avgx)
 var = np.var(avgx)
-print(test[10000]/test[10000])
-print(test[10001]/test[10000])
-print(test[10002]/test[10000])
-print(test[10003]/test[10000])
-print(test[10004]/test[10000])
+#print(test[10000]/test[10000])
+#print(test[10001]/test[10000])
+#print(test[10002]/test[10000])
+#print(test[10003]/test[10000])
+#print(test[10004]/test[10000])
 
 iter =len(i)
 length=2000
 mu=1
 f=1
 oscillator_flip=1
+
 #1=harmonic,0=anharmonic
 #print(Mavgx2)
 #print(Mavgx2[-1])
@@ -121,17 +122,17 @@ for j in range(0,l):
 	std2=[]
 
 
-x=np.linspace(0,l-1,l)
-print(data)
-print(error)
-print(x)
-plt.title("AutoCorelation of <x^2>")
-plt.xlabel("t")
-plt.ylabel("Autocorelation Function")
+#x=np.linspace(0,l-1,l)
+#print(data)
+#print(error)
+#print(x)
+#plt.title("AutoCorelation of <x^2>")
+#plt.xlabel("t")
+#plt.ylabel("Autocorelation Function")
 #plt.errorbar(x,data,yerr=error,ecolor='g')
-plt.plot(test)
+#plt.plot(test)
 #plt.yscale('log')
-plt.show()
+#plt.show()
 
 
 po=[]
@@ -154,7 +155,7 @@ if(oscillator_flip==1):
 	g.savefig("graphs/Average_X_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	g.savefig("graphs/Average_X_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
-'''
+
 
 
 
@@ -235,10 +236,11 @@ else:
 	m.savefig("graphs/Average_DeltaH_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
 
 n=plt.figure()
-#x = np.linspace(-2,2,100) # 100 linearly spaced numbers
-#y = (1/(3.141**0.5))*np.exp(-x**2)
-#out1 = plt.plot(x,y)
-out = plt.hist(data,bins=200,normed=1)
+#w = 1.00124922
+#x = np.linspace(-3,3,200) # 100 linearly spaced numbers
+#y = ((w/(3.141592654))**0.5)*np.exp(-w*(x**2))
+#plt.plot(x,y)
+plt.hist(dataX,bins=100,normed=1)
 plt.xlabel("x")
 plt.ylabel("|psi|^2")
 plt.title("Anharmonic Wavefunction for mu=-4 lamba =0.1")
@@ -246,16 +248,3 @@ if(oscillator_flip==1):
 	n.savefig("graphs/Average_Wavefunction_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	n.savefig("graphs/Average_Wavefunction_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
-'''
-
-
-
-
-
-
-
-
-
-
-
-

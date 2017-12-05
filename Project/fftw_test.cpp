@@ -6,7 +6,33 @@
 #define REAL 0
 #define IMAG 1
 #define PI 3.141592654
+/*
+######NOTES######
+basic recipie for DFT using FFTW:
+-create arrays
+-create the plan(s)
+-execute the DFT
+-re normalise the arrays by n as DFT is no normalised
+-clean up
 
+since we are not going for speed here FFTW_ESTIMATE will probably suffice here
+however it seems that FFTW_MEASURE would be better but would need to look a little 
+more into that before working with it.
+
+remember some of the procedures will destroy the input arrays after they have used them
+may need to edit some of the code
+
+also i don't think that fftw has support for vectors so will need to spend some time 
+re casting most of the program into double[][] or the fftw_complex 
+
+also need to write methods for complex hamiltonians as some of the update equations 
+are now complex and hence will need a complex square 
+
+also need to work on how to pass fftw arrays into the stats class for the complex squaring 
+
+
+
+*/
 int main()
 {
 	//define the length of the complex arrays
