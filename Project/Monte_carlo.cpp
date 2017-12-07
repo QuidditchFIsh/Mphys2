@@ -5,7 +5,7 @@
 	housed here and will be executed here and all of the stats functions will be executed here to create the Raw stats data.
 */
 #include "Monte_carlo.h"
-#define Oscillator_flip 0
+#define Oscillator_flip 1
 //1 = Harmonic
 //0 = Anharmonic
 #define Anharmonic_flip 0
