@@ -47,11 +47,9 @@ int main(){
 	printf("\n");
 	printf("Lattice Spacing:	%f\nMass:   		%f\nmu^2:			%f\nLamba:  		%f\n",a,m,mu,lamba);
 
-	vector<double> v2(length,0);
-	vector<vector<double> >lattice(iterations,v2);
 
 	t1=clock();
-	lattice_Evolution(lattice,length,t_step,iterations,mu,lamba,m,a);
+	lattice_Evolution(length,t_step,iterations,mu,lamba,m,a);
 	t2=clock();
 	
 	float seconds =((float)t2-(float)t1)/(CLOCKS_PER_SEC);

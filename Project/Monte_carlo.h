@@ -7,17 +7,16 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <fftw3.h>
 #include "stastics.h"
+#include "Fourier_Transform.h"
 
 using namespace std;
 
-void lattice_Evolution(vector<vector<double> > &,unsigned int ,double ,unsigned int ,double,double,double,double);
+void lattice_Evolution(unsigned int ,double ,unsigned int ,double,double,double,double);
 
-double hmcAlgorithm_Harmonic(unsigned int ,double ,vector<vector<double> > &,vector<vector<double> > & ,vector<double> &,double,unsigned int,double &,double,double);
+double hmcAlgorithm_Harmonic(unsigned int ,double ,vector<vector<double> > &,vector<vector<double> > & ,double,unsigned int,double &,double,double);
 
-double hmcAlgorithm_Anharmonic(unsigned int ,double ,vector<vector<double> > &,vector<vector<double> > & ,vector<double> &,double,double,unsigned int,double &,double,double);
-
-double hmcAlgorithm_Anharmonic_uncoupled(unsigned int ,double ,vector<vector<double> > &,vector<vector<double> > & ,vector<double> &,double,double,unsigned int);
 
 
 
