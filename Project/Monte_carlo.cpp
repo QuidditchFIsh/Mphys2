@@ -157,7 +157,7 @@ printf("\n");
 double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > p,vector<complex<double> > p_temp,vector<complex<double> > q,vector<complex<double> > q_temp)
 {
 
-	double min=0,H_old=0,H_new=0,H_inter=0;
+	double min=0,H_old=0,H_new=0;
 
 //################WILL NEED TO CHANGE THIS #################
 	H_old=lattice_Hamiltonian(p,q,length,mu,0,m,a);
@@ -166,15 +166,12 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 
 
 	//half step in the p
-	p_temp[0] = old_state[0][0] -  (0.5*t_step * ((a*mu*old_state[1][0]) - ((m/a)*(old_state[1][1]+old_state[1][length-1]-(2*old_state[1][0])))));
-	q_temp[0] = old_state[1][0];
-	for(unsigned int j = 1;j<length-1;j++)
+
+	for(unsigned int j = 0;j<length;j++)
 	{
-		p_temp[j] = old_state[0][j] - (0.5*t_step * ((a*mu*old_state[1][j]) - ((m/a)*(old_state[1][j+1]+old_state[1][j-1]-(2*old_state[1][j])))));
-		q_temp[j] = old_state[1][j];
+		p_temp[j] = p[j] -  (0.5*t_step * (2 * t_step * q[j] * ((a*mu*0.5) + sin(j * 0.5 * (1/a)))));
+		q_temp[j] = q[j];
 	}
-	p_temp[0][length-1] = old_state[0][length-1] - (0.5*t_step * ((a*mu*old_state[1][length-1]) - ((m/a)*(old_state[1][0]+old_state[1][length-2]-(2*old_state[1][length-1])))));
-	q_temp[1][length-1] = old_state[1][length-1];
 
 	//full step in p and q for n steps
 	for(unsigned int i = 0;i<steps;i++)
@@ -182,35 +179,30 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 		//update all q's
 		for(unsigned int j = 0;j<length;j++)
 		{
-			temp_State[1][j] = temp_State[1][j] + ((t_step/m) * temp_State[0][j]);
+			q_temp[j] = q_temp[j] + ((2*(t_step/m)) * p_temp[j]);
 		}
 
 //a full step for when running the algorithm normally
 		if(i != steps-1)
 		{
-			temp_State[0][0] = temp_State[0][0] -  (t_step * ((a*mu*temp_State[1][0]) - ((m/a)*(temp_State[1][1]+temp_State[1][length-1]-(2*temp_State[1][0])))));
-
-			for(unsigned int j = 1;j<length-1;j++)
+			for(unsigned int j = 0;j<length;j++)
 			{
-				temp_State[0][j] = temp_State[0][j] -  (t_step * ((a*mu*temp_State[1][j]) - ((m/a)*(temp_State[1][j+1]+temp_State[1][j-1]-(2*temp_State[1][j])))));
+				p_temp[j] = p[j] -  (t_step * (2 * t_step * q[j] * ((a*mu*0.5) + sin(j * 0.5 * (1/a)))));
 			}
-
-			temp_State[0][length-1] = temp_State[0][length-1] - (t_step * ((a*mu*temp_State[1][length-1]) - ((m/a)*(temp_State[1][0]+temp_State[1][length-2]-(2*temp_State[1][length-1])))));
 		} 
 
 	}
 	//half step in the p
-	temp_State[0][0] = temp_State[0][0] -  (0.5*t_step * ((a*mu*temp_State[1][0]) - ((m/a)*(temp_State[1][1]+temp_State[1][length-1]-(2*temp_State[1][0])))));
 	for(unsigned int j = 1;j<length-1;j++)
 	{
-		temp_State[0][j] = temp_State[0][j] - (0.5*t_step * ((a*mu*temp_State[1][j]) - ((m/a)*(temp_State[1][j+1]+temp_State[1][j-1]-(2*temp_State[1][j])))));
+		p_temp[j] = p[j] -  (0.5*t_step * (2 * t_step * q[j] * ((a*mu*0.5) + sin(j * 0.5 * (1/a)))));
 	}
-	temp_State[0][length-1] = temp_State[0][length-1] - (0.5*t_step * ((a*mu*temp_State[1][length-1]) - ((m/a)*(temp_State[1][0]+temp_State[1][length-2]-(2*temp_State[1][length-1])))));
+
 
 
 	//#########backward fourier transform goes here#############
 
-	H_new = lattice_Hamiltonian(temp_State,length,mu,0,m,a);
+	H_new = lattice_Hamiltonian(p_temp,q_temp,length,mu,0,m,a);
 
 	//metroplis update
 	double r = ((double) rand() / (RAND_MAX));
@@ -221,8 +213,8 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 		//accept
 		for(unsigned int i = 0;i<length;i++)
 		{
-			old_state[1][i] = temp_State[1][i];
-			old_state[0][i] = temp_State[0][i];
+			q[i] = q_temp[i];
+			p[i] = p_temp[i];
 		}
 		delta_H_Average= H_old - H_new;
 		return 1;
