@@ -1,11 +1,18 @@
 #include "Fourier_Transform.h"
 
 
-fftw_complex forwardTransform(fftw_complex in,int length)
+fftw_complex forwardTransform(vector<complex<double> > in_vector,int length)
 {
+
 	//define array which is to be outputted
 	fftw_complex out[length];
+	fftw_complex in[length];
 
+	for(int i=0;i<length;i++)
+	{
+		in[i][REAL] = in_vector[i].real()
+		in[i][IMAG] = in_vector[i].imag();
+	}
 	//create plan
 	fftw_plan forward = fftw_plan_dft_1d(length,in,out,FFTW_FORWARD,FFTW_ESTIMATE);
 
@@ -19,10 +26,18 @@ fftw_complex forwardTransform(fftw_complex in,int length)
 
 
 }
-fftw_complex backwardTransform(fftw_complex in,int length)
+fftw_complex backwardTransform(vector<complex<double> > in_vector,int length)
+{
 {
 	//define array which is to be outputted
 	fftw_complex out[length];
+	fftw_complex in[length];
+
+	for(int i=0;i<length;i++)
+	{
+		in[i][REAL] = in_vector[i].real()
+		in[i][IMAG] = in_vector[i].imag();
+	}
 
 	//create plan
 	fftw_plan backward = fftw_plan_dft_1d(length,in,out,FFTW_BACKWARD,FFTW_ESTIMATE);

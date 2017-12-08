@@ -15,6 +15,9 @@
 	*may actually have to change to complex class as the fourier transform will create complex numbers. 
 
 	Will always need to have doubles in the multipication otherwise there will be errors thrown. 
+
+	maybe it would be good to have a constands file instead of all these defines?
+
 */
 #include "Monte_carlo.h"
 #define REAL 0
