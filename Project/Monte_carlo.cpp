@@ -9,10 +9,19 @@
 	will have to change from vectors to fftw_complex for the fourier acceleration to work. 
 	Will now have to add another fftw_complex to the simulation as a 2D FFT works differently from
 	2 1d ones. 
+
+	Had to change from using vectors to doubles due to need of re interpret cast *
+
+	*may actually have to change to complex class as the fourier transform will create complex numbers. 
+
+	Will always need to have doubles in the multipication otherwise there will be errors thrown. 
 */
 #include "Monte_carlo.h"
 #define REAL 0
 #define IMAG 1
+#define I complex<double>(0,1)
+#define ONE complex<double>(1,0)
+#define ZERO complex<double>(0,0)
 
 void lattice_Evolution(unsigned int length,double t_step,unsigned int iterations,double mu,double lamba,double m,double a)
 {
@@ -36,24 +45,27 @@ printf("\n");
 	output_X1 = fopen("HMC_X1.dat","w");
 
 	// p-0,q-1
-	vector<double> v(length,0);
-	vector<vector<double> > State(2,x);
-	vector<vector<double> >temp_State(2,x);
-	vector<vector<double> >Energy_save(3,x);
-	vector<vector<double> >first_state(2,x);
+//create vectors of complex numbers one for each p and q for convience and clarity in the fourier transform 
+	vector<complex<double> > p(length,ZERO);
+	vector<complex<double> > q(length,ZERO);
+	vector<complex<double> > p_temp(length,ZERO);
+	vector<complex<double> > q_temp(length,ZERO);
 
-	vector<double> square_state(length,0);
+
+	// vector<double> v(length,0);
+	// vector<vector<double> > State(2,x);
+	// vector<vector<double> >temp_State(2,x);
 
 //FFTW array initalise
-	fftw_complex p[length];
-	fftw_complex q[length];
-	fftw_complex p_temp[length];
-	fftw_complex q_temp[length];
+	// fftw_complex p[length];
+	// fftw_complex q[length];
+	// fftw_complex p_temp[length];
+	// fftw_complex q_temp[length];
 
-	fftw_complex Fp[length];
-	fftw_complex Fq[length];
-	fftw_complex Fp_temp[length];
-	fftw_complex Fq_temp[length];
+	// fftw_complex Fp[length];
+	// fftw_complex Fq[length];
+	// fftw_complex Fp_temp[length];
+	// fftw_complex Fq_temp[length];
 
 
 	default_random_engine generator(random_device{}());
@@ -70,12 +82,12 @@ printf("\n");
 
 //initalise the first state of the siulation 
  	for(unsigned int j=0;j<length;j++)
- 	{
- 	//first_state[1][j]=State[1][j];
- 	q[j][REAL] = Udistribution(generator);
+ 	{ 
+ 	q[j].real() = Udistribution(generator);
  		if( j % 2 == 0)
  		{
- 			q[j][REAL]= q[j][REAL] * -1;
+ 			//state[1][j]= state[1][j] * -1;
+ 			q[j].real() = q[j].real() * -1;
  		}
 	}
 
@@ -85,16 +97,14 @@ printf("\n");
  		default_random_engine generator(random_device{}());
  		for(unsigned int j = 0; j<length;j++)
  		{
- 			p[j][REAL] = distribution(generator);
- 			//State[0][j] = 1;
-
+ 			p[j].real() = distribution(generator);
  		}
 
  		//Start the main algorithm 
- 		acceptance += hmcAlgorithm_Harmonic(length,t_step,State,temp_State,mu,steps,delta_H_Average,m,a);
+ 		acceptance += hmcAlgorithm_Harmonic(length,t_step,mu,steps,delta_H_Average,m,a,p,q,p_temp,q_temp);
 
 //perform the stats calculations for the raw data
-
+/*
 		temp_avgx = avgX(State[1]);
 		temp_avgx2 = avg_X_Sqd(State[1]);
 		temp_avgx4 = avg_X_four(State[1]);
@@ -111,8 +121,10 @@ printf("\n");
  			fprintf(output_X,"%f ",State[1][l]);
  		}
  		fprintf(output_X,"\n");
+ 		*/
 
  	}
+ 	/*
  		for(unsigned int l=0;l<length;l++)
 		{
  			fprintf(output_X1,"%f\n",State[1][l]);
@@ -139,30 +151,30 @@ printf("\n");
 
  	printf("Ground State Energy: %f\n",GroundState);
 
-
+*/
 }
 
-double hmcAlgorithm_Harmonic(unsigned int length,double t_step,fftw_complex &p,fftw_complex &q,fftw_complex &p_temp,fftw_complex &p_temp,double mu,unsigned int steps,double &delta_H_Average,double m ,double a)
+double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > p,vector<complex<double> > p_temp,vector<complex<double> > q,vector<complex<double> > q_temp)
 {
 
 	double min=0,H_old=0,H_new=0,H_inter=0;
 
-	H_old=lattice_Hamiltonian(old_state,length,mu,0,m,a);
+//################WILL NEED TO CHANGE THIS #################
+	H_old=lattice_Hamiltonian(p,q,length,mu,0,m,a);
 
-	//Fourier transform then arrays
-	forwardTransform(p,length);
-	forwardTransform(q,length);
+	//##############Fourier transform then arrays##################
+
 
 	//half step in the p
-	temp_State[0][0] = old_state[0][0] -  (0.5*t_step * ((a*mu*old_state[1][0]) - ((m/a)*(old_state[1][1]+old_state[1][length-1]-(2*old_state[1][0])))));
-	temp_State[1][0] = old_state[1][0];
+	p_temp[0] = old_state[0][0] -  (0.5*t_step * ((a*mu*old_state[1][0]) - ((m/a)*(old_state[1][1]+old_state[1][length-1]-(2*old_state[1][0])))));
+	q_temp[0] = old_state[1][0];
 	for(unsigned int j = 1;j<length-1;j++)
 	{
-		temp_State[0][j] = old_state[0][j] - (0.5*t_step * ((a*mu*old_state[1][j]) - ((m/a)*(old_state[1][j+1]+old_state[1][j-1]-(2*old_state[1][j])))));
-		temp_State[1][j] = old_state[1][j];
+		p_temp[j] = old_state[0][j] - (0.5*t_step * ((a*mu*old_state[1][j]) - ((m/a)*(old_state[1][j+1]+old_state[1][j-1]-(2*old_state[1][j])))));
+		q_temp[j] = old_state[1][j];
 	}
-	temp_State[0][length-1] = old_state[0][length-1] - (0.5*t_step * ((a*mu*old_state[1][length-1]) - ((m/a)*(old_state[1][0]+old_state[1][length-2]-(2*old_state[1][length-1])))));
-	temp_State[1][length-1] = old_state[1][length-1];
+	p_temp[0][length-1] = old_state[0][length-1] - (0.5*t_step * ((a*mu*old_state[1][length-1]) - ((m/a)*(old_state[1][0]+old_state[1][length-2]-(2*old_state[1][length-1])))));
+	q_temp[1][length-1] = old_state[1][length-1];
 
 	//full step in p and q for n steps
 	for(unsigned int i = 0;i<steps;i++)

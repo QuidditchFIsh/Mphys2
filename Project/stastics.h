@@ -15,7 +15,7 @@ double standard_Deviation(double , double ,double  );
 
 double error_Bars(vector<double> );
 
-double lattice_Hamiltonian(vector<vector<double> > ,unsigned int,double,double,double,double);
+double lattice_Hamiltonian(vector<complex<double> > ,vector<comeplx<double> > ,unsigned int ,double ,double ,double ,double )
 
 double lattice_Action(vector<double> ,unsigned int,double,double,double,double);
 
