@@ -15,7 +15,7 @@ int main(){
 
 	//Import the data from the file which holds all the data about the simulation 
 	//in form 
-	//iterations length t_step mu lamba 
+	//iterations length t_step mu lamba m a f Oscillator_flip
 
 	vector<double> input;
 	ifstream inputFile;
@@ -38,6 +38,9 @@ int main(){
 	unsigned int iterations = (unsigned int)input[0],length = (unsigned int)input[1];
 
 	double t_step=input[2],mu=input[3],lamba=input[4],m = input[5],a = input[6];
+
+	set_f(input[7]);
+
 
 	printf("##########Simulation Parameters##########\n");
 	printf("\n");
