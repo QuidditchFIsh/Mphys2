@@ -67,11 +67,11 @@ printf("\n");
 //initalise the first state of the siulation 
  	for(unsigned int j=0;j<length;j++)
  	{ 
- 	q[j].real() = Udistribution(generator);
+ 	q[j] = Udistribution(generator) * ONE;
  		if( j % 2 == 0)
  		{
- 			//state[1][j]= state[1][j] * -1;
- 			q[j].real() = q[j].real() * -1;
+ 		 	//state[1][j]= state[1][j] * -1;
+ 			q[j] *= -1.0;
  		}
 	}
 
@@ -81,7 +81,7 @@ printf("\n");
  		default_random_engine generator(random_device{}());
  		for(unsigned int j = 0; j<length;j++)
  		{
- 			p[j].real() = distribution(generator);
+ 			p[j] = distribution(generator) * ONE;
  		}
 
  		//Start the main algorithm 
@@ -99,7 +99,7 @@ printf("\n");
  		avgx +=temp_avgx;
  		avgx2 +=temp_avgx2;
  		avgx4 += temp_avgx4;
- 		fprintf(output_stats,"%d %f %f %f %f %f \n",i,temp_avgx,delta_H_Average,temp_avgx2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length));
+ 		fprintf(output_stats,"%d %f %f %f %f %f \n",i,temp_avgx,delta_H_Average,temp_avgx2,lattice_Action(q,length,m,a,mu,lamba),lattice_KineticEnergy(p,length));
  		}
  		for(unsigned int l=0;l<length;l++)
 		{

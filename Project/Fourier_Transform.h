@@ -1,4 +1,6 @@
 #include <fftw3.h>
+#include <vector>
+#include <complex>
 #include "constants.h"
 
 using namespace std;

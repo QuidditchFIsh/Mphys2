@@ -39,7 +39,7 @@ int main(){
 
 	double t_step=input[2],mu=input[3],lamba=input[4],m = input[5],a = input[6];
 
-	set_f(input[7]);
+	//f = input[7];
 
 
 	printf("##########Simulation Parameters##########\n");

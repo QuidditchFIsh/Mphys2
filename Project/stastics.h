@@ -3,6 +3,8 @@
 #include <random>
 #include <cmath>
 #include <algorithm>
+#include <complex>
+#include <fftw3.h>
 #include "constants.h"
 
 using namespace std;
@@ -15,7 +17,7 @@ double avg_X_four(vector<complex<double> > );
 
 double standard_Deviation(double , double ,double  );
 
-double lattice_Hamiltonian(vector<complex<double> > ,vector<comeplx<double> > ,unsigned int ,double ,double ,double ,double )
+double lattice_Hamiltonian(vector<complex<double> > ,vector<complex<double> > ,unsigned int ,double ,double ,double ,double );
 
 double lattice_Action(vector<complex<double> > ,unsigned int,double,double,double,double);
 

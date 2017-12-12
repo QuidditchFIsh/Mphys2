@@ -1,6 +1,5 @@
 #include "Fourier_Transform.h"
 
-
 void forwardTransform(vector<complex<double> > &in_vector,int length)
 {
 
@@ -10,7 +9,7 @@ void forwardTransform(vector<complex<double> > &in_vector,int length)
 
 	for(int i=0;i<length;i++)
 	{
-		in[i][REAL] = in_vector[i].real()
+		in[i][REAL] = in_vector[i].real();
 		in[i][IMAG] = in_vector[i].imag();
 	}
 	//create plan
@@ -24,14 +23,13 @@ void forwardTransform(vector<complex<double> > &in_vector,int length)
 
 	for(int i=0;i<length;i++)
 	{
-		in_vector[i].real() = 	in[i][REAL];
-		in_vector[i].imag() = 	in[i][IMAG];
+		in_vector[i] = 	in[i][REAL] * ONE;
+		in_vector[i] = 	in[i][IMAG] * I;
 	}
 
 
 }
 void backwardTransform(vector<complex<double> > &in_vector,int length)
-{
 {
 	//define array which is to be outputted
 	fftw_complex out[length];
@@ -39,7 +37,7 @@ void backwardTransform(vector<complex<double> > &in_vector,int length)
 
 	for(int i=0;i<length;i++)
 	{
-		in[i][REAL] = in_vector[i].real()
+		in[i][REAL] = in_vector[i].real();
 		in[i][IMAG] = in_vector[i].imag();
 	}
 
@@ -54,8 +52,8 @@ void backwardTransform(vector<complex<double> > &in_vector,int length)
 
 	for(int i=0;i<length;i++)
 	{
-		in_vector[i].real() = 	in[i][REAL];
-		in_vector[i].imag() = 	in[i][IMAG];
+		in_vector[i] = 	in[i][REAL] * ONE;
+		in_vector[i] = 	in[i][IMAG] * I;
 	}
 
 }
