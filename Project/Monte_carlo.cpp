@@ -16,15 +16,13 @@
 
 	Will always need to have doubles in the multipication otherwise there will be errors thrown. 
 
-	maybe it would be good to have a constands file instead of all these defines?
+	Notes:
+	p-0,q-1
+
 
 */
 #include "Monte_carlo.h"
-#define REAL 0
-#define IMAG 1
-#define I complex<double>(0,1)
-#define ONE complex<double>(1,0)
-#define ZERO complex<double>(0,0)
+
 
 void lattice_Evolution(unsigned int length,double t_step,unsigned int iterations,double mu,double lamba,double m,double a)
 {
@@ -33,9 +31,11 @@ printf("##########################\n");
 printf("\n");
 
 #if Oscillator_flip
-
 	printf("Running in Harmonic Mode\n\n");
+#endif
 
+#if !Oscillator_flip
+	printf("Runnint in Anharmonic Mode\n\n");
 #endif
 
 	FILE * output_stats;
@@ -45,31 +45,13 @@ printf("\n");
 	output_X = fopen("HMC_X.dat","w");
 
 	FILE * output_X1;
-	output_X1 = fopen("HMC_X1.dat","w");
+	output_X1 = fopen("HMC_Final_X.dat","w");
 
-	// p-0,q-1
 //create vectors of complex numbers one for each p and q for convience and clarity in the fourier transform 
 	vector<complex<double> > p(length,ZERO);
 	vector<complex<double> > q(length,ZERO);
 	vector<complex<double> > p_temp(length,ZERO);
 	vector<complex<double> > q_temp(length,ZERO);
-
-
-	// vector<double> v(length,0);
-	// vector<vector<double> > State(2,x);
-	// vector<vector<double> >temp_State(2,x);
-
-//FFTW array initalise
-	// fftw_complex p[length];
-	// fftw_complex q[length];
-	// fftw_complex p_temp[length];
-	// fftw_complex q_temp[length];
-
-	// fftw_complex Fp[length];
-	// fftw_complex Fq[length];
-	// fftw_complex Fp_temp[length];
-	// fftw_complex Fq_temp[length];
-
 
 	default_random_engine generator(random_device{}());
  	normal_distribution<double> distribution(0.0,1.0);
@@ -77,10 +59,9 @@ printf("\n");
  	uniform_real_distribution<double> Udistribution(0.0,1.0);
 
 
-//########################CLEAN UP THESE#####################
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
  	unsigned int steps =15,burn=0;
-//######################################################
+
 
 
 //initalise the first state of the siulation 
@@ -107,11 +88,12 @@ printf("\n");
  		acceptance += hmcAlgorithm_Harmonic(length,t_step,mu,steps,delta_H_Average,m,a,p,q,p_temp,q_temp);
 
 //perform the stats calculations for the raw data
-/*
-		temp_avgx = avgX(State[1]);
-		temp_avgx2 = avg_X_Sqd(State[1]);
-		temp_avgx4 = avg_X_four(State[1]);
+
+		temp_avgx = avgX(q);
+		temp_avgx2 = avg_X_Sqd(q);
+		temp_avgx4 = avg_X_four(q);
 		dH_avg += delta_H_Average;
+
 		if(i>burn)
 		{
  		avgx +=temp_avgx;
@@ -121,16 +103,16 @@ printf("\n");
  		}
  		for(unsigned int l=0;l<length;l++)
 		{
- 			fprintf(output_X,"%f ",State[1][l]);
+ 			fprintf(output_X,"%f ",q[l].real());
  		}
  		fprintf(output_X,"\n");
- 		*/
+ 		
 
  	}
- 	/*
+ 	
  		for(unsigned int l=0;l<length;l++)
 		{
- 			fprintf(output_X1,"%f\n",State[1][l]);
+ 			fprintf(output_X1,"%f\n",q[l].real());
  		}
  		fprintf(output_X1,"\n");
 
@@ -154,7 +136,7 @@ printf("\n");
 
  	printf("Ground State Energy: %f\n",GroundState);
 
-*/
+
 }
 
 double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > p,vector<complex<double> > p_temp,vector<complex<double> > q,vector<complex<double> > q_temp)
@@ -162,11 +144,11 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 
 	double min=0,H_old=0,H_new=0;
 
-//################WILL NEED TO CHANGE THIS #################
 	H_old=lattice_Hamiltonian(p,q,length,mu,0,m,a);
 
-	//##############Fourier transform then arrays##################
-
+	//Fourier transform the arrays
+	forwardTransform(p,length);
+	forwardTransform(q,length);
 
 	//half step in the p
 
@@ -204,6 +186,12 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 
 
 	//#########backward fourier transform goes here#############
+
+	backwardTransform(q_temp,length);
+	backwardTransform(p_temp,length);
+	backwardTransform(p,length);
+	backwardTransform(q,length);
+
 
 	H_new = lattice_Hamiltonian(p_temp,q_temp,length,mu,0,m,a);
 

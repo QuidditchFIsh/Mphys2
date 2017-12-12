@@ -1,7 +1,7 @@
 #include "Fourier_Transform.h"
 
 
-fftw_complex forwardTransform(vector<complex<double> > in_vector,int length)
+void forwardTransform(vector<complex<double> > &in_vector,int length)
 {
 
 	//define array which is to be outputted
@@ -22,11 +22,15 @@ fftw_complex forwardTransform(vector<complex<double> > in_vector,int length)
 	//clean up
 	fftw_destroy_plan(forward);
 
-	return out;
+	for(int i=0;i<length;i++)
+	{
+		in_vector[i].real() = 	in[i][REAL];
+		in_vector[i].imag() = 	in[i][IMAG];
+	}
 
 
 }
-fftw_complex backwardTransform(vector<complex<double> > in_vector,int length)
+void backwardTransform(vector<complex<double> > &in_vector,int length)
 {
 {
 	//define array which is to be outputted
@@ -48,5 +52,10 @@ fftw_complex backwardTransform(vector<complex<double> > in_vector,int length)
 	//clean up
 	fftw_destroy_plan(backward);
 
-	return out;
+	for(int i=0;i<length;i++)
+	{
+		in_vector[i].real() = 	in[i][REAL];
+		in_vector[i].imag() = 	in[i][IMAG];
+	}
+
 }

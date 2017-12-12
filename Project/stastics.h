@@ -3,23 +3,23 @@
 #include <random>
 #include <cmath>
 #include <algorithm>
+#include "constants.h"
+
 using namespace std;
 
-double avgX(vector<double> );
+double avgX(vector<complex<double> > );
 
-double avg_X_Sqd(vector<double> );
+double avg_X_Sqd(vector<complex<double> > );
 
-double avg_X_four(vector<double> );
+double avg_X_four(vector<complex<double> > );
 
 double standard_Deviation(double , double ,double  );
 
-double error_Bars(vector<double> );
-
 double lattice_Hamiltonian(vector<complex<double> > ,vector<comeplx<double> > ,unsigned int ,double ,double ,double ,double )
 
-double lattice_Action(vector<double> ,unsigned int,double,double,double,double);
+double lattice_Action(vector<complex<double> > ,unsigned int,double,double,double,double);
 
-double lattice_KineticEnergy(vector<double>,unsigned int);
+double lattice_KineticEnergy(vector<complex<double> >,unsigned int);
 
 double Harmonic_hamiltonian(double ,double ,double,double,double,double);
 

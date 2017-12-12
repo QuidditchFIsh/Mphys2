@@ -8,9 +8,10 @@
 #include <cmath>
 #include <algorithm>
 #include <complex>
-//#include <fftw3.h>
+#include <fftw3.h>
 #include "stastics.h"
-//#include "Fourier_Transform.h"
+#include "Fourier_Transform.h"
+#include "constants.h"
 
 using namespace std;
 
