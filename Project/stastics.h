@@ -3,6 +3,8 @@
 #include <random>
 #include <cmath>
 #include <algorithm>
+#include "constants.h"
+
 using namespace std;
 
 double avgX(vector<double> );

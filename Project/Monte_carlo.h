@@ -9,6 +9,7 @@
 #include <algorithm>
 #include "stastics.h"
 #include "functions.h"
+#include "constants.h"
 
 using namespace std;
 

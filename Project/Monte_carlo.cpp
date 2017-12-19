@@ -5,17 +5,6 @@
 	housed here and will be executed here and all of the stats functions will be executed here to create the Raw stats data.
 */
 #include "Monte_carlo.h"
-#define Oscillator_flip 1
-<<<<<<< HEAD
-//0 = Harmonic
-//1 = Anharmonic
-=======
-//1 = Harmonic
-//0 = Anharmonic
-#define Anharmonic_flip 0
-//1 = lamba and mu
-//0 = lamba and f
->>>>>>> 63622eac36ac696e8972a64a076a6b58df1d5301
 
 void lattice_Evolution(vector<vector<double> > &lattice,unsigned int length,double t_step,unsigned int iterations,double mu,double lamba,double m,double a)
 {

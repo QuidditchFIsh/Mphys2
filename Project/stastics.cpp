@@ -6,9 +6,7 @@
 */
 
 #include "stastics.h"
-#define Stats_Flip 1
-//1 = Harmonic
-//0 = Anharmonic
+
 
 
 double avgX(vector<double> results)
@@ -91,7 +89,7 @@ double lattice_Hamiltonian(vector<vector<double> > state,unsigned int length,dou
 {
 	double H=0;
 	//loop for all sites which are not effected by periodic BC's
-#if Stats_Flip
+#if !Oscillator_flip
 	
 	for(unsigned int i=0;i<length-1;i++)
 	{
@@ -102,7 +100,7 @@ double lattice_Hamiltonian(vector<vector<double> > state,unsigned int length,dou
 
 #endif
 
-#if !Stats_Flip
+#if Oscillator_flip
 	for(unsigned int i=0;i<length-1;i++)
 	{
 		H += Anarmonic_hamiltonian(state[0][i],state[1][i],state[1][i+1],mu,lamba,m,a);
@@ -117,7 +115,7 @@ double lattice_Hamiltonian(vector<vector<double> > state,unsigned int length,dou
 double lattice_Action(vector<double> q,unsigned int length,double m,double a,double mu,double lamba)
 {
 	double S = 0;
-#if Stats_Flip
+#if !Oscillator_flip
 	for(unsigned int i =0; i<length-1;i++)
 	{
 		S += Harmonic_action(q[i],q[i+1],m,a,mu);
@@ -126,7 +124,7 @@ double lattice_Action(vector<double> q,unsigned int length,double m,double a,dou
 	S += Harmonic_action(q[length-1],q[0],m,a,mu);
 #endif
 
-#if !Stats_Flip
+#if Oscillator_flip
 	for(unsigned int i =0; i<length-1;i++)
 	{
 		S += Anarmonic_action(q[i],q[i+1],m,a,mu,lamba);
