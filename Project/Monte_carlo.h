@@ -8,16 +8,10 @@
 #include <cmath>
 #include <algorithm>
 #include "stastics.h"
+#include "functions.h"
 
 using namespace std;
 
 void lattice_Evolution(vector<vector<double> > &,unsigned int ,double ,unsigned int ,double,double,double,double);
 
-double hmcAlgorithm_Harmonic(unsigned int ,double ,vector<vector<double> > &,vector<vector<double> > & ,vector<double> &,double,unsigned int,double &,double,double);
-
-double hmcAlgorithm_Anharmonic(unsigned int ,double ,vector<vector<double> > &,vector<vector<double> > & ,vector<double> &,double,double,unsigned int,double &,double,double);
-
-double hmcAlgorithm_Anharmonic_uncoupled(unsigned int ,double ,vector<vector<double> > &,vector<vector<double> > & ,vector<double> &,double,double,unsigned int);
-
-
-
+double hmcAlgorithm(unsigned int ,double ,vector<vector<double> > &,vector<vector<double> > & ,vector<double> &,double,unsigned int,double &,double,double);

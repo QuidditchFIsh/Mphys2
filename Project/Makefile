@@ -8,7 +8,7 @@ LD_FLAGS =-std=c++11
 
 EXEC = HMC
 
-SRC_CPP = Main.cpp Monte_carlo.cpp stastics.cpp
+SRC_CPP = Main.cpp Monte_carlo.cpp stastics.cpp functions.cpp
 
 OBJS_CPP = $(SRC_CPP:.cpp=.o)
 

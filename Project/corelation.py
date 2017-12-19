@@ -146,17 +146,17 @@ for i in range(start,start+length):
 	nine=0
 	ten=0
 
-data.append((sum1/2000))
-data.append((sum2/2000))
-data.append((sum3/2000))
-data.append((sum4/2000))
-data.append((sum5/2000))
-data.append((sum6/2000))
-data.append((sum7/2000))
-data.append((sum8/2000))
-data.append((sum9/2000))
-data.append((sum10/2000))
-data.append((sum11/2000))
+data.append((sum1/sum1))
+data.append((sum2/sum1))
+data.append((sum3/sum1))
+data.append((sum4/sum1))
+data.append((sum5/sum1))
+data.append((sum6/sum1))
+data.append((sum7/sum1))
+data.append((sum8/sum1))
+data.append((sum9/sum1))
+data.append((sum10/sum1))
+data.append((sum11/sum1))
 
 print(data)
 plt.plot(data)
