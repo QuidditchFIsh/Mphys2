@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <fftw3.h>
 #include "Monte_carlo.h"
 #include "stastics.h"
 #include "constants.h"
+#include "Fourier_Transform.h"
 #include <vector>
 #include <time.h>
 #include <iostream>

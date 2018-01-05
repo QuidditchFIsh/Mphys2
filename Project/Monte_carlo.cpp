@@ -30,14 +30,7 @@ void lattice_Evolution(unsigned int length,double t_step,unsigned int iterations
 printf("##########################\n");
 printf("\n");
 
-#if Oscillator_flip
-	printf("Running in Harmonic Mode\n\n");
-#endif
-
-#if !Oscillator_flip
-	printf("Runnint in Anharmonic Mode\n\n");
-#endif
-
+printf("Running in a random mode for some reaons.\n\n");
 	FILE * output_stats;
 	output_stats = fopen("HMC_Stats.dat","w");
 
@@ -154,7 +147,7 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 
 	for(unsigned int j = 0;j<length;j++)
 	{
-		p_temp[j] = p[j] -  (0.5*t_step * (2 * t_step * q[j] * ((a*mu*0.5) + sin(j * 0.5 * (1/a)))));
+		p_temp[j] = p[j] -  (0.5*t_step * (t_step * q[j] * ((a*mu) + (4 * sin(j * 0.5 * (1/a))))));
 		q_temp[j] = q[j];
 	}
 
@@ -164,7 +157,7 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 		//update all q's
 		for(unsigned int j = 0;j<length;j++)
 		{
-			q_temp[j] = q_temp[j] + ((2*(t_step/m)) * p_temp[j]);
+			q_temp[j] = q_temp[j] + (((t_step/m)) * p_temp[j]);
 		}
 
 //a full step for when running the algorithm normally
@@ -172,7 +165,7 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 		{
 			for(unsigned int j = 0;j<length;j++)
 			{
-				p_temp[j] = p[j] -  (t_step * (2 * t_step * q[j] * ((a*mu*0.5) + sin(j * 0.5 * (1/a)))));
+				p_temp[j] = p[j] -  (t_step * (t_step * q[j] * ((a*mu) + (4 * sin(j * 0.5 * (1/a))))));
 			}
 		} 
 
@@ -180,7 +173,7 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 	//half step in the p
 	for(unsigned int j = 1;j<length-1;j++)
 	{
-		p_temp[j] = p[j] -  (0.5*t_step * (2 * t_step * q[j] * ((a*mu*0.5) + sin(j * 0.5 * (1/a)))));
+		p_temp[j] = p[j] -  (0.5*t_step * (t_step * q[j] * ((a*mu) + (4 * sin(j * 0.5 * (1/a))))));
 	}
 
 
