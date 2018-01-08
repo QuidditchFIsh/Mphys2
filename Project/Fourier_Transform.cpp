@@ -20,11 +20,16 @@ void forwardTransform(vector<complex<double> > &in_vector,int length)
 
 	//clean up
 	fftw_destroy_plan(forward);
+	
+	for(int i=0;i<length;i++)
+	{
+		out[i][REAL] /= length;
+		out[i][IMAG] /= length;
+	}
 
 	for(int i=0;i<length;i++)
 	{
-		in_vector[i] = 	in[i][REAL] * ONE;
-		in_vector[i] = 	in[i][IMAG] * I;
+		in_vector[i] = 	(out[i][REAL] * ONE) + (out[i][IMAG] * I);
 	}
 
 
@@ -49,11 +54,15 @@ void backwardTransform(vector<complex<double> > &in_vector,int length)
 
 	//clean up
 	fftw_destroy_plan(backward);
-
+	
 	for(int i=0;i<length;i++)
 	{
-		in_vector[i] = 	in[i][REAL] * ONE;
-		in_vector[i] = 	in[i][IMAG] * I;
+		out[i][REAL] /= length;
+		out[i][IMAG] /= length;
+	}
+	for(int i=0;i<length;i++)
+	{
+		in_vector[i] = 	(out[i][REAL] * ONE) + (out[i][IMAG] * I);
 	}
 
 }
