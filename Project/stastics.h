@@ -17,7 +17,7 @@ double standard_Deviation(double , double ,double  );
 
 double error_Bars(vector<double> );
 
-double lattice_Hamiltonian(vector<vector<double> > ,unsigned int,double,double,double,double);
+double lattice_Hamiltonian(vector<vector<double> > ,unsigned int,double,double,double,double,double);
 
 double lattice_Action(vector<double> ,unsigned int,double,double,double,double);
 
@@ -27,7 +27,7 @@ double Harmonic_hamiltonian(double ,double ,double,double,double,double);
 
 double Harmonic_action(double,double,double ,double,double);
 
-double Anarmonic_hamiltonian(double ,double ,double,double,double,double,double);
+double Anarmonic_hamiltonian(double ,double,double,double,double,double,double);
 
 double Anarmonic_action(double,double,double,double,double,double);
 
