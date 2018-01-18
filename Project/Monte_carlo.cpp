@@ -10,11 +10,11 @@ void lattice_Evolution(vector<vector<double> > &lattice,unsigned int length,doub
 {
 printf("##########################\n");
 printf("\n");
-#if Oscillator_flip
+#if !Oscillator_flip
 	printf("Running in Harmonic Mode\n\n");
 #endif
 
-#if !Oscillator_flip
+#if Oscillator_flip
 	printf("Running in Anharmonic Mode\n");
 #endif
 
@@ -44,12 +44,12 @@ printf("\n");
 	H_store[0]=0;
 
 	default_random_engine generator(random_device{}());
- 	normal_distribution<double> distribution(0.0,1.0);
+ 	normal_distribution<double> distribution(0.0,m);
 
- 	uniform_real_distribution<double> Udistribution(0.0,1.0);
+ 	uniform_real_distribution<double> Udistribution(0.0,m);
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,error_x=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =10,burn=2000;
+ 	unsigned int steps =15,burn=2000;
 
 
 //initalise the first state of the siulation 
@@ -74,7 +74,7 @@ printf("\n");
  		}
 
  		//Maind HMC algorithm.
- 		acceptance += hmcAlgorithm_Harmonic(length,t_step,State,temp_State,H_store,mu,steps,delta_H_Average,m,a);
+ 		acceptance += hmcAlgorithm(length,t_step,State,temp_State,H_store,mu,steps,delta_H_Average,m,a);
 
 		temp_avgx = avgX(State[1]);
 		temp_avgx2 = avg_X_Sqd(State[1]);
@@ -88,26 +88,26 @@ printf("\n");
  		avgx2 +=temp_avgx2;
  		avgx4 += temp_avgx4;
 
- 		fprintf(output_stats,"%d %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length));
+ 		//fprintf(output_stats,"%d %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length));
  		}
- 		for(unsigned int l=0;l<length;l++)
-		{
- 			fprintf(output_X,"%f ",State[1][l]);
- 		}
- 		fprintf(output_X,"\n");
+ 	// 	for(unsigned int l=0;l<length;l++)
+		// {
+ 	// 		//fprintf(output_X,"%f ",State[1][l]);
+ 	// 	}
+ 	// 	fprintf(output_X,"\n");
 
  	}
- 		for(unsigned int l=0;l<length;l++)
-		{
- 			fprintf(output_X1,"%f ",State[1][l]);
- 		}
- 		fprintf(output_X1,"\n");
+ 	// 	for(unsigned int l=0;l<length;l++)
+		// {
+ 	// 		fprintf(output_X1,"%f ",State[1][l]);
+ 	// 	}
+ 	// 	fprintf(output_X1,"\n");
 
 
  	double stdx=0,stdx2=0;
 
- 	stdx= sqrt(((avgx2/(iterations-burn)) - pow(avgx/(iterations-burn),2))/(iterations-burn-1));
- 	stdx2= sqrt(((avgx4/(iterations-burn)) - pow(avgx2/(iterations-burn),2))/(iterations-burn-1));
+ 	stdx  = sqrt(((avgx2/(iterations-burn)) - pow(avgx/(iterations-burn),2))/(iterations-burn-1));
+ 	stdx2 = sqrt(((avgx4/(iterations-burn)) - pow(avgx2/(iterations-burn),2))/(iterations-burn-1));
 
 //Output the Data to the Terminal To save Calcuation time in Python
  	printf("########## Data ##########\n");
@@ -118,20 +118,26 @@ printf("\n");
  	printf("Average x^2: %f +/-%f\n",avgx2/(iterations-burn),stdx2);
  	printf("Average x^4: %f\n",avgx4/(iterations-burn));
  	double GroundState=0;
+
 #if Oscillator_flip
+
  	GroundState = (mu*avgx2/(iterations-burn));
+
 #endif
 
 #if !Oscillator_flip
+
  	GroundState = (mu*avgx2/(iterations-burn)) + (3 * lamba * (avgx4/(iterations-burn)));
+
 #endif
+
  	printf("Ground State Energy: %f\n",GroundState);
 
 }
 
 double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &old_state,vector<vector<double> > &temp_State,vector<double> &H_store,double mu,unsigned int steps,double &delta_H_Average,double m ,double a)
 {
-	double min=0,H_old=0,H_new=0,H_inter=0,f=1;
+	double min=0,H_old=0,H_new=0,H_inter=0,f=2;
 
 	H_old=lattice_Hamiltonian(old_state,length,mu,1,m,a);
 
