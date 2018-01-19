@@ -15,7 +15,7 @@ def estimated_autocorrelation(x):
 	#temp = autocorr_f[autocorr_f.size/2:]
 	return autocorr_f
 
-
+#######################SETUP#############################
 #initalise arrays and variables
 avgx=[];avgx2=[];action=[];KE=[];delta_h=[];i=[];avgx4=[];jjj=[]
 Mavgx=[];Mavgx2=[];Maction=[];MKE=[];Mdelta_h=[];Mavgx4=[]
@@ -28,7 +28,7 @@ file  = open("HMC_Stats.dat",'r')
 #file1 = open("HMC_X.dat","r")
 
 for line in file:
-	a,b,c,d,e,f,gg = line.split(' ', 6)
+	a,b,c,d,e,f,gg,hh = line.split(' ', 7)
 	i.append(float(a))
 	avgx.append(float(b))
 	#avgxerr.append(float(c))
@@ -37,9 +37,9 @@ for line in file:
 	action.append(float(f))
 	KE.append(float(gg))
 	delta_h.append(float(c))
-	#avgx4.append(float(c))
+	avgx4.append(float(hh))
 
-dataX=np.genfromtxt("HMC_X1.dat", unpack=True)
+dataX=np.genfromtxt("HMC_X.dat", unpack=True)
 #print(data)
 
 #stats calculations
@@ -50,7 +50,7 @@ for j in range(rm,len(i)):
 	sum3 += action[j]
 	sum4 += KE[j]
 	sum5 += delta_h[j]
-	#sum5 += avgx4[j]
+	sum6 += avgx4[j]
 
 	
 	sum12 += avgx[j] * avgx[j]
@@ -58,6 +58,7 @@ for j in range(rm,len(i)):
 	sum32 += action[j] * action[j]
 	sum42 += KE[j] * KE[j]
 	sum52 += delta_h[j] * delta_h[j]
+	sum62 += avgx4[j] * avgx4[j]
 
 	k=j+1-rm
 	Mavgx.append(sum1/k)
@@ -65,24 +66,15 @@ for j in range(rm,len(i)):
 	Maction.append(sum3/k)
 	MKE.append(sum4/k)
 	Mdelta_h.append((sum5/k))
-	Mavgx4.append(sum5/k)
+	Mavgx4.append(sum6/k)
 
 
-#	avgxerr.append(sqrt((sum12/k)-(sum1*sum1/(k*k))/k))
-	#avgx2err.append(sqrt((sum22/k)-(sum2*sum2/(k*k))/k))
-#	actionerr.append(sqrt((sum32/k)-(sum3*sum3/(k*k))/k))
-#	KEerr.append(sqrt((sum42/k)-(sum4*sum4/(k*k))/k))
-#	delta_herr.append((sum52/j)-(sum5*sum5/(j*j))/j)
 
 del avgx2err[:rm]
 
 test=estimated_autocorrelation(avgx)
 var = np.var(avgx)
-#print(test[10000]/test[10000])
-#print(test[10001]/test[10000])
-#print(test[10002]/test[10000])
-#print(test[10003]/test[10000])
-#print(test[10004]/test[10000])
+
 
 iter =len(i)
 length=2000
@@ -90,12 +82,7 @@ mu=1
 f=1
 oscillator_flip=1
 
-#1=harmonic,0=anharmonic
-#print(Mavgx2)
-#print(Mavgx2[-1])
-#print(Mavgx4[-1])
-#print(Mavgx)
-#print(Mavgx2)
+
 mean = Mavgx[-1]
 sum=0
 sum1=0
@@ -121,22 +108,23 @@ for j in range(0,l):
 	std1=[]
 	std2=[]
 
+#####################END SECTION##########################
 
-#x=np.linspace(0,l-1,l)
-#print(data)
-#print(error)
-#print(x)
-#plt.title("AutoCorelation of <x^2>")
-#plt.xlabel("t")
-#plt.ylabel("Autocorelation Function")
-#plt.errorbar(x,data,yerr=error,ecolor='g')
-#plt.plot(test)
-#plt.yscale('log')
-#plt.show()
+#######################ERROR ANALYSIS#######################
+xerr  = []
+x2err = []
+
+for j in range(2,len(avgx)-1):
+	xerr.append(sqrt((Mavgx2[i] - (Mavgx[i] * Mavgx[i]))/(j-1)))
+	x2err.append(sqrt((Mavgx4[i] - (Mavgx2[i] * Mavgx2[i]))/(j-1)))
 
 
+###########################END SECTION##############################
+
+
+################################PLOTTING####################
 po=[]
-#Plotting
+
 g=plt.figure(figsize=(8,6))
 gs1 = gridspec.GridSpec(2, 1, height_ratios=[3, 1]) 
 gx2=plt.subplot(gs1[0])
@@ -145,12 +133,13 @@ plt.ylabel('<X>')
 #gx2.axhline(y=0.0,lw=1,color='red',label='Theoretical AvgX')
 gx2.plot(Mavgx,label='Simulated AvgX')
 #gx2.set_ylim([-0.01,0.01])
-plt.legend(loc='lower right')
+plt.legend(loc='upper right')
 
 gx=plt.subplot(gs1[1])
 plt.ylabel('<X> error')
 plt.xlabel('Iterations')
-gx.plot(avgxerr,label='Simulated AvgX Error',color='green')
+plt.ylim(-0.1,0.2)
+gx.plot(xerr,label='Simulated AvgX Error',color='green')
 if(oscillator_flip==1):
 	g.savefig("graphs/Average_X_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
@@ -172,7 +161,8 @@ plt.legend(loc='center right')
 hx=plt.subplot(gs2[1])
 plt.ylabel('<X^2> error')
 plt.xlabel('Iterations')
-hx.plot(avgx2err,label='Simulated AvgX^2 Error',color='green')
+plt.ylim(-0.1,0.2)
+hx.plot(x2err,label='Simulated AvgX^2 Error',color='green')
 if(oscillator_flip==1):
 	h.savefig("graphs/Average_X^2_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
@@ -248,3 +238,6 @@ if(oscillator_flip==1):
 	n.savefig("graphs/Average_Wavefunction_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	n.savefig("graphs/Average_Wavefunction_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
+
+
+############################END SECTION######################################

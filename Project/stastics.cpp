@@ -59,32 +59,6 @@ double standard_Deviation(double avg_X_Sqd, double avgX,double length )
 	return sqrt(std_dev);
 }
 
-
-double error_Bars(vector<double> results)
-{
-
-	//using bootstrap algorithm to calcuate the error on the bars
-	//FIND A BETTER WAY TO DO THIS
-
-	double length =results.size() * 0.8,avgx,avgxx;
-	int len = (int)length,rand_No;
-
-	vector<double> sample(1,0);
-	//THIS COULD CAUSE SOME TROUBLE IN THE STATS
-
-	for(int i =0; i< len ; i++)
-	{
-		rand_No = rand() % results.size();
-		//sample.insert(results[rand_No]);
-	}
-
-	avgx = avgX(sample);
-	avgxx = avg_X_Sqd(sample);
-
-	return standard_Deviation(avgx,avgxx,(double)len);
-
-}
-
 double lattice_Hamiltonian(vector<vector<double> > state,unsigned int length,double mu,double lamba,double m,double a,double f)
 {
 	double H=0;

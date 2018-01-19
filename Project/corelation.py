@@ -8,47 +8,23 @@ import statistics
 
 
 data=[]
+data_err=[]
 length=1
 
+zero = 0;one = 0;two = 0;three = 0;four = 0;five = 0;six = 0;seven = 0;eight = 0;nine = 0;ten = 0
 
-one=0
-zero=0
-two=0
-three=0
-four=0
-five=0
-six=0
-seven=0
-eight=0
-nine=0
-ten=0
+sum1 = 0;sum2 = 0;sum3 = 0;sum4 = 0;sum5 = 0;sum6 = 0;sum7 = 0;sum8 = 0;sum9 = 0;sum10 = 0;sum11 =0
 
-sum1 = 0
-sum2 = 0
-sum3 = 0
-sum4 = 0
-sum5 = 0
-sum6 = 0
-sum7 = 0
-sum8 = 0
-sum9 = 0
-sum10 = 0
-sum11 =0
+sum12 = 0;sum22 = 0;sum32 = 0;sum42 = 0;sum52 = 0;sum62 = 0;sum72 = 0;sum82 = 0;sum92 = 0;sum102 = 0;sum112 = 0
 
-ones=0
-zeros=0
-twos=0
-threes=0
-fours=0
-fives=0
-sixs=0
-sevens=0
-eights=0
-nines=0
-tens=0
+ones = 0; zeros = 0; twos = 0; threes = 0; fours = 0; fives = 0; sixs = 0; sevens = 0; eights = 0; nines = 0;tens = 0
 
-length = 2000
+one_err = 0;two_err = 0;three_err = 0;four_err = 0;five_err = 0;six_err = 0;seven_err = 0;eight_err = 0;nine_err = 0;ten_err = 0;eleven_err = 0
+
+length = 50000
 start = 4000
+
+
 for i in range(start,start+length):
 	x  =linecache.getline("HMC_X.dat",1+i)
 	x   = x.split(" ")
@@ -109,110 +85,106 @@ for i in range(start,start+length):
 
 
 	for i in range(0,len(x)-10):
-		zero +=xn[i]*xn[i]
-		one+=xn[i]*xn[i+1]
-		two +=xn[i]*xn[i+2]
-		three +=xn[i]*xn[i+3]
-		four +=xn[i]*xn[i+4]
-		five +=xn[i]*xn[i+5]
-		six +=xn[i] *xn[i+6]
-		seven +=xn[i] *xn[i+7]
-		eight +=xn[i] *xn[i+8]
-		nine +=xn[i] *xn[i+9]
-		ten +=xn[i] *xn[i+10]
+		zero  += xn[i] * xn[i]
+		one   += xn[i] * xn[i+1]
+		two   += xn[i] * xn[i+2]
+		three += xn[i] * xn[i+3]
+		four  += xn[i] * xn[i+4]
+		five  += xn[i] * xn[i+5]
+		six   += xn[i] * xn[i+6]
+		seven += xn[i] * xn[i+7]
+		eight += xn[i] * xn[i+8]
+		nine  += xn[i] * xn[i+9]
+		ten   += xn[i] * xn[i+10]
 
-	sum1+=(zero/(len(x)-10))
-	sum2+=(one/(len(x)-10))
-	sum3+=(two/(len(x)-10))
-	sum4+=(three/(len(x)-10))
-	sum5+=(four/(len(x)-10))
-	sum6+=(five/(len(x)-10))
-	sum7+=(six/(len(x)-10))
-	sum8+=(seven/(len(x)-10))
-	sum9+=(eight/(len(x)-10))
-	sum10+=(nine/(len(x)-10))
-	sum11+=(ten/(len(x)-10))
+	sum1  += (zero / (len(x) - 10))
+	sum2  += (one / (len(x) - 10))
+	sum3  += (two / (len(x) - 10))
+	sum4  += (three / (len(x) - 10))
+	sum5  += (four / (len(x) - 10))
+	sum6  += (five / (len(x) - 10))
+	sum7  += (six / (len(x) - 10))
+	sum8  += (seven / (len(x) - 10))
+	sum9  += (eight / (len(x) - 10))
+	sum10 += (nine / (len(x) - 10))
+	sum11 += (ten / (len(x) - 10))
+
+	sum12  += (zero**2/ (len(x) - 10))
+	sum22  += (one**2 / (len(x) - 10))
+	sum32  += (two**2  / (len(x) - 10))
+	sum42  += (three**2 / (len(x) - 10))
+	sum52  += (four**2 / (len(x) - 10))
+	sum62  += (five**2 / (len(x) - 10))
+	sum72  += (six**2 / (len(x) - 10))
+	sum82  += (seven**2 / (len(x) - 10))
+	sum92  += (eight**2 / (len(x) - 10))
+	sum102 += (nine**2 / (len(x) - 10))
+	sum112 += (ten**2 / (len(x) - 10))
 
 
-	one=0
-	zero=0
-	two=0
-	three=0
-	four=0
-	five=0
-	six=0
-	seven=0
-	eight=0
-	nine=0
-	ten=0
 
-data.append((sum1/sum1))
-data.append((sum2/sum1))
-data.append((sum3/sum1))
-data.append((sum4/sum1))
-data.append((sum5/sum1))
-data.append((sum6/sum1))
-data.append((sum7/sum1))
-data.append((sum8/sum1))
-data.append((sum9/sum1))
-data.append((sum10/sum1))
-data.append((sum11/sum1))
+	one = 0; zero = 0; two = 0; three = 0; four = 0; five = 0; six = 0; seven = 0; eight = 0; nine = 0; ten = 0
+
+
+sum1  = sum1  / length
+sum2  = sum2  / length
+sum3  = sum3  / length
+sum4  = sum4  / length
+sum5  = sum5  / length
+sum6  = sum6  / length
+sum7  = sum7  / length
+sum8  = sum8  / length
+sum9  = sum9  / length
+sum10 = sum10 / length
+sum11 = sum11 / length
+
+sum12  = sum12  / length
+sum22  = sum22  / length
+sum32  = sum32  / length
+sum42  = sum42  / length
+sum52  = sum52  / length
+sum62  = sum62  / length
+sum72  = sum72  / length
+sum82  = sum82  / length
+sum92  = sum92  / length
+sum102 = sum102 / length
+sum112 = sum112 / length
+
+data_err.append(sqrt((sum12  -  (sum1 * sum1))  / length))
+data_err.append(sqrt((sum22  -  (sum2 * sum2))  / length))
+data_err.append(sqrt((sum32  -  (sum3 * sum3))  / length))
+data_err.append(sqrt((sum42  -  (sum4 * sum4))  / length))
+data_err.append(sqrt((sum52  -  (sum5 * sum5))  / length))
+data_err.append(sqrt((sum62  -  (sum6 * sum6))  / length))
+data_err.append(sqrt((sum72  -  (sum7 * sum7))  / length))
+data_err.append(sqrt((sum82  -  (sum8 * sum8))  / length))
+data_err.append(sqrt((sum92  -  (sum9 * sum9))  / length))
+data_err.append(sqrt((sum102 - (sum10 * sum10)) / length))
+data_err.append(sqrt((sum112 - (sum11 * sum11)) / length))
+
+data.append((sum1))
+data.append((sum2))
+data.append((sum3))
+data.append((sum4))
+data.append((sum5))
+data.append((sum6))
+data.append((sum7))
+data.append((sum8))
+data.append((sum9))
+data.append((sum10))
+data.append((sum11))
+
+file = open("corelation_out.txt","w")
+
+for i in range(0,len(data)):
+	file.write(str(data[i]) + " " + str(data_err[i]) + "\n")
+
+file.close()
+
+
 
 print(data)
+print(data_err)
 plt.plot(data)
 #plt.yscale('log')
 plt.show()
-
-
-'''
-
-
-
-	zeros+=(zero/zero)
-	ones+=(one/zero)
-	twos+=(two/zero)
-	threes+=(three/zero)
-	fours+=(four/zero)
-	fives+=(five/zero)
-	six+=(six/zero)
-	seven+=(seven/zero)
-	eights+=(eight/zero)
-	nine+=(nine/zero)
-	ten+=(ten/zero)
-
-	one=0
-	zero=0
-	two=0
-	three=0
-	four=0
-	five=0
-	six=0
-	seven=0
-	eight=0
-	nine=0
-	ten=0
-
-ones=ones/length
-zeros=zeros/length
-twos=twos/length
-threes=threes/length
-fours=fours/length
-fives=fives/length
-sixs=sixs/length
-sevens=sevens/length
-eights=eights/length
-nines=nines/length
-tens=tens/length
-
-print(zeros)
-print(ones)
-print(twos)
-print(threes)
-print(fours)
-print(fives)
-print(sixs)
-print(sevens)
-print(eights)
-print(nines)
-print(tens)
-'''
