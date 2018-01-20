@@ -45,7 +45,13 @@ int main(){
 	printf("\n");
 	printf("##########Equation Parameters############\n");
 	printf("\n");
+
+#if !Oscillator_flip
 	printf("Lattice Spacing:	%f\nMass:   		%f\nmu^2:			%f\nLamba:  		%f\n",a,m,mu,lamba);
+#endif
+#if Oscillator_flip
+	printf("Lattice Spacing:	%f\nMass:   		%f\nmu^2:			%f\nLamba:  		%f\n",a,m,0.0,1.0);
+#endif
 
 	vector<double> v2(length,0);
 	vector<vector<double> >lattice(iterations,v2);

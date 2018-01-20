@@ -48,8 +48,9 @@ printf("\n");
 
  	uniform_real_distribution<double> Udistribution(0.0,m);
 
- 	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,error_x=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =15,burn=2000;
+
+ 	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
+ 	unsigned int steps =20,burn=0;
 
 
 //initalise the first state of the siulation 
@@ -88,20 +89,22 @@ printf("\n");
  		avgx2 +=temp_avgx2;
  		avgx4 += temp_avgx4;
 
- 		//fprintf(output_stats,"%d %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length));
+
+ 		fprintf(output_stats,"%d %f %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length),temp_avgx4);
+
  		}
- 	// 	for(unsigned int l=0;l<length;l++)
-		// {
- 	// 		//fprintf(output_X,"%f ",State[1][l]);
- 	// 	}
- 	// 	fprintf(output_X,"\n");
+ 		for(unsigned int l=0;l<length;l++)
+		{
+ 			//fprintf(output_X,"%f ",State[1][l]);
+ 		}
+ 		fprintf(output_X,"\n");
 
  	}
- 	// 	for(unsigned int l=0;l<length;l++)
-		// {
- 	// 		fprintf(output_X1,"%f ",State[1][l]);
- 	// 	}
- 	// 	fprintf(output_X1,"\n");
+ 		for(unsigned int l=0;l<length;l++)
+		{
+ 			fprintf(output_X1,"%f ",State[1][l]);
+ 		}
+ 		fprintf(output_X1,"\n");
 
 
  	double stdx=0,stdx2=0;
@@ -137,9 +140,10 @@ printf("\n");
 
 double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &old_state,vector<vector<double> > &temp_State,vector<double> &H_store,double mu,unsigned int steps,double &delta_H_Average,double m ,double a)
 {
-	double min=0,H_old=0,H_new=0,H_inter=0,f=2;
 
-	H_old=lattice_Hamiltonian(old_state,length,mu,1,m,a);
+	double min=0,H_old=0,H_new=0,f=3;
+
+	H_old=lattice_Hamiltonian(old_state,length,mu,1,m,a,f);
 
 	//half step in the p
 	#if Oscillator_flip
@@ -193,7 +197,7 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 		//update all q's
 		for(unsigned int j = 0;j<length;j++)
 		{
-			temp_State[1][j] = temp_State[1][j] + ((t_step/m) * temp_State[0][j]);
+			temp_State[1][j] = temp_State[1][j] + (t_step * temp_State[0][j]);
 		}
 
 //a full step for when running the algorithm normally
@@ -267,7 +271,7 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 			temp_State[0][length-1] = temp_State[0][length-1] - (0.5*t_step * Harmonic_Potential(temp_State[1][length-1],temp_State[1][0],temp_State[1][length-2],m,mu,a));
 
 			#endif
-	H_new = lattice_Hamiltonian(temp_State,length,mu,1,m,a);
+	H_new = lattice_Hamiltonian(temp_State,length,mu,1,m,a,f);
 
 	//metroplis update
 	double r = ((double) rand() / (RAND_MAX));
