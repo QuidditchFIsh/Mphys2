@@ -23,8 +23,8 @@ void forwardTransform(vector<complex<double> > &in_vector,int length)
 	
 	for(int i=0;i<length;i++)
 	{
-		out[i][REAL] /= length;
-		out[i][IMAG] /= length;
+		//out[i][REAL] /= length;
+		//out[i][IMAG] /= length;
 	}
 
 	for(int i=0;i<length;i++)

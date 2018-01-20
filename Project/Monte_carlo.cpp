@@ -53,7 +53,7 @@ printf("Running in a random mode for some reaons.\n\n");
 
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =1,burn=0;
+ 	unsigned int steps =15,burn=0;
 
 
 
@@ -64,7 +64,7 @@ printf("Running in a random mode for some reaons.\n\n");
  		if( j % 2 == 0)
  		{
  		 	//state[1][j]= state[1][j] * -1;
- 			q[j] *= -1.0 * ONE;
+ 			//q[j] *= -1.0 * ONE;
  		}
 	}
 	// printf("positions\n");
@@ -83,7 +83,19 @@ printf("Running in a random mode for some reaons.\n\n");
  		}
 
  		//Start the main algorithm 
+ // 			for(int i=0;i<length;i++)
+	// {
+	// 	printf("%f  %f  ",p[i].real(),p[i].imag());
+	// }
+	// printf("\n");
 
+	// for(int i=0;i<length;i++)
+	// {
+	// 	printf("%f  %f  ",q[i].real(),q[i].imag());
+	// }
+	// printf("\n");
+	// printf("\n");
+	// 	printf("#####################################################\n");
  		acceptance += hmcAlgorithm_Harmonic(length,t_step,mu,steps,delta_H_Average,m,a,p,q,p_temp,q_temp);
 
 //perform the stats calculations for the raw data
@@ -118,8 +130,8 @@ printf("Running in a random mode for some reaons.\n\n");
 
  	double stdx=0,stdx2=0;
 
- 	stdx= sqrt(((avgx2/(iterations-burn)) - pow(avgx/(iterations-burn),2))/(iterations-burn-1));
- 	stdx2= sqrt(((avgx4/(iterations-burn)) - pow(avgx2/(iterations-burn),2))/(iterations-burn-1));
+ 	stdx  = sqrt(((avgx2 / (iterations - burn)) - pow(avgx  / (iterations - burn),2)) / (iterations - burn - 1));
+ 	stdx2 = sqrt(((avgx4 / (iterations - burn)) - pow(avgx2 / (iterations - burn),2)) / (iterations - burn - 1));
 
 //Output the Data to the Terminal To save Calcuation time in Python
  	printf("########## Data ##########\n");
@@ -138,12 +150,12 @@ printf("Running in a random mode for some reaons.\n\n");
 
 }
 
-double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > p,vector<complex<double> > q,vector<complex<double> > p_temp,vector<complex<double> > q_temp)
+double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > &p,vector<complex<double> > &q,vector<complex<double> > &p_temp,vector<complex<double> > &q_temp)
 {
 
 	double min=0,H_old=0,H_new=0;
 
-	H_old=lattice_Hamiltonian(p,q,length,mu,0,m,a);
+	H_old=lattice_Hamiltonian(p,q,length,mu,0,1.0,a);
 
 	// for(int i=0;i<length;i++)
 	// {
@@ -157,8 +169,8 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 	// }
 	// printf("\n");
 	// printf("\n");
-	//Fourier transform the arrays
-	// printf("###################################\n");
+	// printf("---------------------------------------\n");
+	//	Fourier transform the arrays
 	forwardTransform(p,length);
 	forwardTransform(q,length);
 	// printf("###################################\n");
@@ -179,7 +191,7 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 
 	for(unsigned int j = 0;j<length;j++)
 	{
-		p_temp[j] = p[j] -  (0.5*t_step * (q[j] * ((a*a*mu) + (4 * (1/(a*a)) * sin(j * 0.5 * a) * sin(j * 0.5 * a)))));
+		p_temp[j] = p[j] - (0.5 * (t_step / (a * a)) * q[j] * ((a * a * mu) + (4 * sin(j * a * 0.5) * sin(j * a * 0.5))));
 		q_temp[j] = q[j];
 	}
 
@@ -189,23 +201,21 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 		//update all q's
 		for(unsigned int j = 0;j<length;j++)
 		{
-			q_temp[j] = q_temp[j] + (((t_step/m)) * p_temp[j]);
+			q_temp[j] = q_temp[j] + (t_step * p_temp[j]);
 		}
-
-//a full step for when running the algorithm normally
 		if(i != steps-1)
 		{
 			for(unsigned int j = 0;j<length;j++)
 			{
-				p_temp[j] = p[j] -  (t_step * (q[j] * ((a*a*mu) + (4 * (1/(a*a)) *  sin(j * 0.5 * a) * sin(j * 0.5 * a)))));
+				p_temp[j] = p_temp[j] - (t_step / (a * a)) * q_temp[j] * ((a * a * mu) + (4 * sin(j * a * 0.5) * sin(j * a * 0.5)));
 			}
 		} 
 
 	}
 	//half step in the p
-	for(unsigned int j = 1;j<length-1;j++)
+	for(unsigned int j = 0;j<length;j++)
 	{
-		p_temp[j] = p[j] -  (0.5*t_step * (q[j] * ((a*a*mu) + (4 * (1/(a*a)) *  sin(j * 0.5 * a) * sin(j * 0.5 * a)))));
+		p_temp[j] = p_temp[j] - (0.5 * (t_step / (a * a)) * q_temp[j] * ((a * a * mu) + (4 * sin(j * a * 0.5) * sin(j * a * 0.5))));
 	}
 
 
@@ -219,17 +229,18 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 
 	// for(int i=0;i<length;i++)
 	// {
-	// 	printf("%f  %f  ",p[i].real(),p[i].imag());
+	// 	printf("%f  %f  ",p_temp[i].real(),p_temp[i].imag());
 	// }
 	// printf("\n");
 
 	// for(int i=0;i<length;i++)
 	// {
-	// 	printf("%f  %f  ",q[i].real(),q[i].imag());
+	// 	printf("%f  %f  ",q_temp[i].real(),q_temp[i].imag());
 	// }
 	// printf("\n");
 	// printf("\n");
-	H_new = lattice_Hamiltonian(p_temp,q_temp,length,mu,0,m,a);
+	// 	printf("#####################################################\n");
+	H_new = lattice_Hamiltonian(p_temp,q_temp,length,mu,0,1.0,a);
 
 	//metroplis update
 	double r = ((double) rand() / (RAND_MAX));
@@ -241,13 +252,15 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 		for(unsigned int i = 0;i<length;i++)
 		{
 			q[i] = q_temp[i];
-			p[i] = p_temp[i];
+			//p[i] = p_temp[i];
 		}
 		delta_H_Average= H_old - H_new;
+		//printf("yes\n");
 		return 1;
 		
 	}
 	delta_H_Average = H_old - H_new;
+//	printf("no\n");
 	return 0;
 	
 }

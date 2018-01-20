@@ -124,7 +124,7 @@ double lattice_KineticEnergy(vector<complex<double> > p,unsigned int length)
 double Harmonic_hamiltonian(double p,double q,double q_plus,double mu,double m,double a)
 {
 	//regular version
-	return (p*p*0.5*(1/m)) + ((pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q));
+	return (p*p*0.5) + ((pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q));
 }
 
 double Harmonic_action(double q, double q_plus,double m,double a,double mu)

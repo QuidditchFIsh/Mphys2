@@ -28,11 +28,11 @@ for line in file:
 	avgx2.append(float(d))
 	avgx2err.append(float(e))
 	action.append(float(f))
-	KE.append(float(gg))
+	#KE.append(float(gg))
 	delta_h.append(float(c))
 	#avgx4.append(float(c))
 
-dataX=np.genfromtxt("HMC_X1.dat", unpack=True)
+dataX=np.genfromtxt("HMC_Final_X.dat", unpack=True)
 #print(data)
 
 #stats calculations
@@ -41,7 +41,7 @@ for j in range(rm,len(i)):
 	sum1 += avgx[j]
 	sum2 += avgx2[j]
 	sum3 += action[j]
-	sum4 += KE[j]
+	#sum4 += KE[j]
 	sum5 += delta_h[j]
 	#sum5 += avgx4[j]
 
@@ -49,14 +49,14 @@ for j in range(rm,len(i)):
 	sum12 += avgx[j] * avgx[j]
 	sum22 += avgx2[j] * avgx2[j]
 	sum32 += action[j] * action[j]
-	sum42 += KE[j] * KE[j]
+	#sum42 += KE[j] * KE[j]
 	sum52 += delta_h[j] * delta_h[j]
 
 	k=j+1-rm
 	Mavgx.append(sum1/k)
 	Mavgx2.append(sum2/k)
 	Maction.append(sum3/k)
-	MKE.append(sum4/k)
+	#MKE.append(sum4/k)
 	Mdelta_h.append((sum5/k))
 	Mavgx4.append(sum5/k)
 
@@ -183,10 +183,11 @@ else:
 
 n=plt.figure()
 #w = 1.00124922
-#x = np.linspace(-3,3,200) # 100 linearly spaced numbers
-#y = ((w/(3.141592654))**0.5)*np.exp(-w*(x**2))
-#plt.plot(x,y)
-plt.hist(dataX,bins=100,normed=1)
+w=1
+x = np.linspace(-3,3,200) # 100 linearly spaced numbers
+y = ((w/(3.141592654))**0.5)*np.exp(-w*(x**2))
+plt.plot(x,y)
+plt.hist(dataX,bins=50,normed=1)
 plt.xlabel("x")
 plt.ylabel("|psi|^2")
 plt.title("Anharmonic Wavefunction for mu=-4 lamba =0.1")

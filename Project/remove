@@ -1,2 +1,2 @@
 rm -rf HMC_Final_X.dat HMC_Stats.dat HMC_X.dat HMC_X1.dat
-
+make clean

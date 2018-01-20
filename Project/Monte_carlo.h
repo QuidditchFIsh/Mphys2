@@ -17,7 +17,7 @@ using namespace std;
 
 void lattice_Evolution(unsigned int ,double ,unsigned int ,double,double,double,double);
 
-double hmcAlgorithm_Harmonic(unsigned int length,double ,double,unsigned int,double &,double,double,vector<complex<double> >,vector<complex<double> >,vector<complex<double> >,vector<complex<double> >);
+double hmcAlgorithm_Harmonic(unsigned int length,double ,double,unsigned int,double &,double,double,vector<complex<double> > &,vector<complex<double> > &,vector<complex<double> > &,vector<complex<double> > &);
 
 
 
