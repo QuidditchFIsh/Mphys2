@@ -191,7 +191,7 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 
 	for(unsigned int j = 0;j<length;j++)
 	{
-		p_temp[j] = p[j] - (0.5 * (t_step / (a * a)) * q[j] * ((a * a * mu) + (4 * sin(j * a * 0.5) * sin(j * a * 0.5))));
+		p_temp[j] = p[j] - (0.5 * t_step * q[j] * ((mu * a) + ((m/a) * 4 * sin((PI/length) * j) * sin((PI/length) * j))));
 		q_temp[j] = q[j];
 	}
 
@@ -207,7 +207,7 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 		{
 			for(unsigned int j = 0;j<length;j++)
 			{
-				p_temp[j] = p_temp[j] - (t_step / (a * a)) * q_temp[j] * ((a * a * mu) + (4 * sin(j * a * 0.5) * sin(j * a * 0.5)));
+				p_temp[j] = p_temp[j] - (t_step  * q_temp[j] * ((mu * a) + ((m/a) * 4 * sin((PI/length) * j) * sin((PI/length) * j ))));
 			}
 		} 
 
@@ -215,7 +215,7 @@ double hmcAlgorithm_Harmonic(unsigned int length,double t_step,double mu,unsigne
 	//half step in the p
 	for(unsigned int j = 0;j<length;j++)
 	{
-		p_temp[j] = p_temp[j] - (0.5 * (t_step / (a * a)) * q_temp[j] * ((a * a * mu) + (4 * sin(j * a * 0.5) * sin(j * a * 0.5))));
+		p_temp[j] = p_temp[j] - (0.5 * t_step * q_temp[j] * ((mu * a) + ((m/a) * 4 * sin((PI/length) * j) * sin((PI/length) * j))));
 	}
 
 

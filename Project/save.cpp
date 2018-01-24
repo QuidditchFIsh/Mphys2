@@ -598,3 +598,19 @@ double hmcAlgorithm_Anharmonic(unsigned int length,double t_step,vector<vector<d
  		printf("\n\n");
 
 
+
+
+
+
+
+		p_temp[j] = p[j] - (0.5 * t_step * q[j] * 0.5 * a * (mu + (4 * sin((PI2/length) * j * a * 0.5) * sin((PI2/length) * j * a * 0.5))));
+		p_temp[j] = p[j] - (0.5 * (t_step / (a * a)) * q[j] * ((a * a * mu) + (4 * sin((PI2/length) * j * a * 0.5) * sin((PI2/length) * j * a * 0.5))));
+
+
+
+
+		p_temp[j] = p_temp[j] - (t_step  * q_temp[j] * 0.5 * a * (mu + (4 * sin((PI2/length) * j * a * 0.5) * sin((PI2/length) * j * a * 0.5))));
+		p_temp[j] = p_temp[j] - (t_step / (a * a)) * q_temp[j] * ((a * a * mu) + (4 * sin((PI2/length) * j * a * 0.5) * sin((PI2/length) * j * a * 0.5)));
+
+		p_temp[j] = p_temp[j] - (0.5 * t_step * q_temp[j] * 0.5 * a *(mu + (4 * sin((PI2/length) * j * a * 0.5) * sin((PI2/length) * j * a * 0.5))));
+		p_temp[j] = p_temp[j] - (0.5 * (t_step / (a * a)) * q_temp[j] * ((a * a * mu) + (4 * sin((PI2/length) * j * a * 0.5) * sin((PI2/length) * j * a * 0.5))));
