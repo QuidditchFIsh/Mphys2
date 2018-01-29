@@ -88,7 +88,7 @@ printf("\n");
  		avgx2 +=temp_avgx2;
  		avgx4 += temp_avgx4;
 
- 		fprintf(output_stats,"%d %f %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length),temp_avgx4);
+ 		//fprintf(output_stats,"%d %f %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length),temp_avgx4);
  		}
  		for(unsigned int l=0;l<length;l++)
 		{
@@ -106,8 +106,8 @@ printf("\n");
 
  	double stdx=0,stdx2=0;
 
- 	stdx= sqrt(((avgx2/(iterations-burn)) - pow(avgx/(iterations-burn),2))/(iterations-burn-1));
- 	stdx2= sqrt(((avgx4/(iterations-burn)) - pow(avgx2/(iterations-burn),2))/(iterations-burn-1));
+ 	stdx  = sqrt(((avgx2/(iterations-burn)) - pow(avgx/(iterations-burn),2))/(iterations-burn-1));
+ 	stdx2 = sqrt(((avgx4/(iterations-burn)) - pow(avgx2/(iterations-burn),2))/(iterations-burn-1));
 
 //Output the Data to the Terminal To save Calcuation time in Python
  	printf("########## Data ##########\n");
@@ -118,6 +118,7 @@ printf("\n");
  	printf("Average x^2: %f +/-%f\n",avgx2/(iterations-burn),stdx2);
  	printf("Average x^4: %f\n",avgx4/(iterations-burn));
  	double GroundState=0;
+
 #if Oscillator_flip
  	GroundState = (mu*avgx2/(iterations-burn));
 #endif
@@ -131,7 +132,7 @@ printf("\n");
 
 double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &old_state,vector<vector<double> > &temp_State,vector<double> &H_store,double mu,unsigned int steps,double &delta_H_Average,double m ,double a)
 {
-	double min=0,H_old=0,H_new=0,f=3;
+	double min=0,H_old=0,H_new=0,f=1;
 
 	H_old=lattice_Hamiltonian(old_state,length,mu,1,m,a,f);
 
