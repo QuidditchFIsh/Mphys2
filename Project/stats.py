@@ -72,7 +72,7 @@ for j in range(rm,len(i)):
 
 del avgx2err[:rm]
 
-test=estimated_autocorrelation(avgx)
+#test=estimated_autocorrelation(avgx)
 var = np.var(avgx)
 
 
@@ -83,7 +83,7 @@ f=1
 oscillator_flip=1
 
 
-mean = Mavgx[-1]
+#mean = Mavgx[-1]
 sum=0
 sum1=0
 temp1=0
@@ -92,6 +92,7 @@ data=[]
 std1=[]
 std2=[]
 l=7
+'''
 for j in range(0,l):
 	for i in range(4000,iter-j):
 		temp1=(avgx[i]-mean)*(avgx[i+j]-mean)
@@ -107,7 +108,7 @@ for j in range(0,l):
 	sum1=0
 	std1=[]
 	std2=[]
-
+'''
 #####################END SECTION##########################
 
 #######################ERROR ANALYSIS#######################
@@ -115,8 +116,8 @@ xerr  = []
 x2err = []
 
 for j in range(2,len(avgx)-1):
-	xerr.append(sqrt((Mavgx2[i] - (Mavgx[i] * Mavgx[i]))/(j-1)))
-	x2err.append(sqrt((Mavgx4[i] - (Mavgx2[i] * Mavgx2[i]))/(j-1)))
+	xerr.append(sqrt((Mavgx2[j] - (Mavgx[j] * Mavgx[j]))/(j-1)))
+	x2err.append(sqrt((Mavgx4[j] - (Mavgx2[j] * Mavgx2[j]))/(j-1)))
 
 
 ###########################END SECTION##############################

@@ -77,10 +77,10 @@ double lattice_Hamiltonian(vector<vector<double> > state,unsigned int length,dou
 #if Oscillator_flip
 	for(unsigned int i=0;i<length-1;i++)
 	{
-		H += Anarmonic_hamiltonian(state[0][i],state[1][i],state[1][i+1],0,lamba,m,a);
+		H += Anarmonic_hamiltonian(state[0][i],state[1][i],state[1][i+1],1,m,a,f);
 	}
 	//Periodic BC sites
-	H += Anarmonic_hamiltonian(state[0][length-1],state[1][length-1],state[1][0],0,lamba,m,a);
+	H += Anarmonic_hamiltonian(state[0][length-1],state[1][length-1],state[1][0],1,m,a,f);
 #endif
 
 	return H;

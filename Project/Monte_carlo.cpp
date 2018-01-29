@@ -6,7 +6,7 @@
 */
 #include "Monte_carlo.h"
 
-void lattice_Evolution(vector<vector<double> > &lattice,unsigned int length,double t_step,unsigned int iterations,double mu,double lamba,double m,double a)
+void lattice_Evolution(vector<vector<double> > &lattice,unsigned int length,double t_step,unsigned int iterations,double mu,double lamba,double m,double a,double f)
 {
 printf("##########################\n");
 printf("\n");
@@ -49,7 +49,7 @@ printf("\n");
  	uniform_real_distribution<double> Udistribution(0.0,1.0);
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =20,burn=0;
+ 	unsigned int steps =20,burn=2000;
 
 
 //initalise the first state of the siulation 
@@ -74,7 +74,7 @@ printf("\n");
  		}
 
  		//Maind HMC algorithm.
- 		acceptance += hmcAlgorithm(length,t_step,State,temp_State,H_store,mu,steps,delta_H_Average,m,a);
+ 		acceptance += hmcAlgorithm(length,t_step,State,temp_State,H_store,mu,steps,delta_H_Average,m,a,f);
 
 		temp_avgx = avgX(State[1]);
 		temp_avgx2 = avg_X_Sqd(State[1]);
@@ -88,7 +88,7 @@ printf("\n");
  		avgx2 +=temp_avgx2;
  		avgx4 += temp_avgx4;
 
- 		//fprintf(output_stats,"%d %f %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length),temp_avgx4);
+ 		fprintf(output_stats,"%d %f %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length),temp_avgx4);
  		}
  		for(unsigned int l=0;l<length;l++)
 		{
@@ -106,8 +106,8 @@ printf("\n");
 
  	double stdx=0,stdx2=0;
 
- 	stdx  = sqrt(((avgx2/(iterations-burn)) - pow(avgx/(iterations-burn),2))/(iterations-burn-1));
- 	stdx2 = sqrt(((avgx4/(iterations-burn)) - pow(avgx2/(iterations-burn),2))/(iterations-burn-1));
+ 	stdx  = sqrt(((avgx2/(iterations-burn)) - pow(avgx  / (iterations-burn),2)) / (iterations-burn-1));
+ 	stdx2 = sqrt(((avgx4/(iterations-burn)) - pow(avgx2 / (iterations-burn),2)) / (iterations-burn-1));
 
 //Output the Data to the Terminal To save Calcuation time in Python
  	printf("########## Data ##########\n");
@@ -130,22 +130,22 @@ printf("\n");
 
 }
 
-double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &old_state,vector<vector<double> > &temp_State,vector<double> &H_store,double mu,unsigned int steps,double &delta_H_Average,double m ,double a)
+double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &old_state,vector<vector<double> > &temp_State,vector<double> &H_store,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,double f)
 {
-	double min=0,H_old=0,H_new=0,f=1;
+	double min=0,H_old=0,H_new=0;
 
 	H_old=lattice_Hamiltonian(old_state,length,mu,1,m,a,f);
 
 	//half step in the p
 	#if Oscillator_flip
 
-	temp_State[0][0] = old_state[0][0] -  (0.5*t_step * Anharmonic_Potential_f(old_state[1][0],old_state[1][1],old_state[1][length-1],m,a,1,f));
+	temp_State[0][0] = old_state[0][0] -  (0.5 * t_step * Anharmonic_Potential_f(old_state[1][0],old_state[1][1],old_state[1][length-1],m,a,1,f));
 
 	#endif
 
 	#if !Oscillator_flip
 
-	temp_State[0][0] = old_state[0][0] -  (0.5*t_step * Harmonic_Potential(old_state[1][0],old_state[1][1],old_state[1][length-1],m,mu,a));
+	temp_State[0][0] = old_state[0][0] -  (0.5 * t_step * Harmonic_Potential(old_state[1][0],old_state[1][1],old_state[1][length-1],m,mu,a));
 
 	#endif
 
@@ -155,7 +155,7 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 	{
 		#if Oscillator_flip
 
-		temp_State[0][j] = old_state[0][j] - (0.5*t_step * Anharmonic_Potential_f(old_state[1][j],old_state[1][j+1],old_state[1][j-1],m,a,1,f));
+		temp_State[0][j] = old_state[0][j] - (0.5 * t_step * Anharmonic_Potential_f(old_state[1][j],old_state[1][j+1],old_state[1][j-1],m,a,1,f));
 
 		#endif
 
@@ -170,13 +170,13 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 
 	#if Oscillator_flip
 
-	temp_State[0][length-1] = old_state[0][length-1] - (0.5*t_step * Anharmonic_Potential_f(old_state[1][length-1],old_state[1][0],old_state[1][length-2],m,a,1,f));
+	temp_State[0][length-1] = old_state[0][length-1] - (0.5 * t_step * Anharmonic_Potential_f(old_state[1][length-1],old_state[1][0],old_state[1][length-2],m,a,1,f));
 
 	#endif
 
 	#if !Oscillator_flip
 
-	temp_State[0][length-1] = old_state[0][length-1] - (0.5*t_step * Harmonic_Potential(old_state[1][length-1],old_state[1][0],old_state[1][length-2],m,mu,a));
+	temp_State[0][length-1] = old_state[0][length-1] - (0.5 * t_step * Harmonic_Potential(old_state[1][length-1],old_state[1][0],old_state[1][length-2],m,mu,a));
 
 	#endif
 
