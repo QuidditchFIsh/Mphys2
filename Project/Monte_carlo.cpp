@@ -49,7 +49,7 @@ printf("\n");
  	uniform_real_distribution<double> Udistribution(0.0,1.0);
 
  	double acceptance  =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =20,burn=2000;
+ 	unsigned int steps =2000,burn=2000;
 
 
 //initalise the first state of the siulation 
@@ -141,6 +141,8 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 
 	H_old=lattice_Hamiltonian(old_state,length,mu,1,m,a,f);
 
+	vector<double> H_store1(steps,0);
+
 	//half step in the p
 	#if Oscillator_flip
 
@@ -190,6 +192,7 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 	//full step in p and q for n steps
 	for(unsigned int i = 0;i<steps;i++)
 	{
+		H_store1[i] = lattice_Hamiltonian(temp_State,length,mu,1,m,a,f);
 		//update all q's
 		for(unsigned int j = 0;j<length;j++)
 		{
@@ -270,6 +273,13 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 
 	H_new = lattice_Hamiltonian(temp_State,length,mu,1,m,a,f);
 
+	FILE* out_H;
+	out_H = fopen("HMC_H1","w");
+
+	for(int k=0;k<steps;k++)
+	{
+		fprintf(out_H,"%f\n",H_store1[k]);
+	}
 	//metroplis update
 	double r = ((double) rand() / (RAND_MAX));
 
