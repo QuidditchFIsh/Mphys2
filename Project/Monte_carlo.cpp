@@ -60,7 +60,7 @@ printf("Running in Anharmonic Mode\n");
 
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =1000,burn=0;
+ 	unsigned int steps =2000,burn=0;
 
 
 
@@ -187,13 +187,13 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 			}
 		} 
 
-		// backwardTransform(q_temp,length);
-		// backwardTransform(p_temp,length);
+		backwardTransform(q_temp,length);
+		backwardTransform(p_temp,length);
 
-		// H_store[i] = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,a,f);	
+		H_store[i] = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,a,f);	
 
-		// forwardTransform(p_temp,length);
-		// forwardTransform(q_temp,length);		
+		forwardTransform(p_temp,length);
+		forwardTransform(q_temp,length);		
 
 	}
 //half step in the p
@@ -209,12 +209,12 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 	}
 
 
-	// FILE * output_H;
-	// output_H = fopen("HMC_H","w");
-	// for(int k=0;k<steps;k++)
-	// {
-	// 	fprintf(output_H,"%f\n",H_store[k]);
-	// }
+	FILE * output_H;
+	output_H = fopen("HMC_H","w");
+	for(int k=0;k<steps;k++)
+	{
+		fprintf(output_H,"%f\n",H_store[k]);
+	}
 //#########backward fourier transform goes here#############
 
 	backwardTransform(q_temp,length);
