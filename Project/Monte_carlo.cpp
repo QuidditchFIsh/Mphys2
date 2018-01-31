@@ -60,7 +60,7 @@ printf("Running in Anharmonic Mode\n");
 
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =20,burn=0;
+ 	unsigned int steps =1000,burn=0;
 
 
 
@@ -142,7 +142,9 @@ printf("Running in Anharmonic Mode\n");
 double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > &p,vector<complex<double> > &q,vector<complex<double> > &p_temp,vector<complex<double> > &q_temp,double f)
 {
 
-	double min=0,H_old=0,H_new=0;
+	double min=0,H_old=0,H_new=0,H_inter=0;
+
+	vector<double> H_store(steps,0);
 
 	H_old=lattice_Hamiltonian(p,q,length,mu,1.0,m,a,f);
 
@@ -170,6 +172,7 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 		{
 			q_temp[j] = q_temp[j] + (t_step * p_temp[j]);
 		}
+
 		if(i != steps-1)
 		{
 			for(unsigned int j = 0;j<length;j++)
@@ -183,6 +186,14 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 #endif
 			}
 		} 
+
+		// backwardTransform(q_temp,length);
+		// backwardTransform(p_temp,length);
+
+		// H_store[i] = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,a,f);	
+
+		// forwardTransform(p_temp,length);
+		// forwardTransform(q_temp,length);		
 
 	}
 //half step in the p
@@ -198,7 +209,12 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 	}
 
 
-
+	// FILE * output_H;
+	// output_H = fopen("HMC_H","w");
+	// for(int k=0;k<steps;k++)
+	// {
+	// 	fprintf(output_H,"%f\n",H_store[k]);
+	// }
 //#########backward fourier transform goes here#############
 
 	backwardTransform(q_temp,length);
@@ -207,7 +223,7 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 	backwardTransform(q,length);
 
 	H_new = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,a,f);
-	printf("%f %f\n",H_old,H_new);
+	//printf("%f %f\n",H_old,H_new);
 //metroplis update
 	double r = ((double) rand() / (RAND_MAX));
 
