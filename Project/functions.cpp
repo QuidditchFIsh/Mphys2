@@ -14,5 +14,5 @@ double Harmonic_Potential(double q,double q_plus,double q_minus,double m,double 
 double Anharmonic_Potential_f(double q,double q_plus,double q_minus,double m,double a,double lamba,double f)
 {
 	//anharmonic potential with lamba and f
-	return (4*a*lamba*q*(pow(q,2)-f)) + ((m/a)*(2*q - q_minus - q_plus));
+	return (4 * a * lamba * q * (pow(q,2)-f)) + ((m/a)*(2*q - q_minus - q_plus));
 }

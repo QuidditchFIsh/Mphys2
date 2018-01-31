@@ -48,7 +48,7 @@ printf("\n");
 
  	uniform_real_distribution<double> Udistribution(0.0,1.0);
 
- 	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
+ 	double acceptance  =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
  	unsigned int steps =20,burn=2000;
 
 
@@ -87,22 +87,27 @@ printf("\n");
  		avgx +=temp_avgx;
  		avgx2 +=temp_avgx2;
  		avgx4 += temp_avgx4;
-
+ 		
+#if OutPut
  		fprintf(output_stats,"%d %f %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length),temp_avgx4);
+#endif 		 		
  		}
+#if OutPut
  		for(unsigned int l=0;l<length;l++)
 		{
  			fprintf(output_X,"%f ",State[1][l]);
  		}
  		fprintf(output_X,"\n");
+#endif
 
  	}
+#if OutPut
  		for(unsigned int l=0;l<length;l++)
 		{
  			fprintf(output_X1,"%f ",State[1][l]);
  		}
  		fprintf(output_X1,"\n");
-
+#endif
 
  	double stdx=0,stdx2=0;
 
@@ -119,12 +124,12 @@ printf("\n");
  	printf("Average x^4: %f\n",avgx4/(iterations-burn));
  	double GroundState=0;
 
-#if Oscillator_flip
+#if !Oscillator_flip
  	GroundState = (mu*avgx2/(iterations-burn));
 #endif
 
-#if !Oscillator_flip
- 	GroundState = (mu*avgx2/(iterations-burn)) + (3 * lamba * (avgx4/(iterations-burn)));
+#if Oscillator_flip
+ 	GroundState = (-4 * f * (avgx2/(iterations-burn))) + (3 * (avgx4/(iterations-burn))) + (lamba*f*f);
 #endif
  	printf("Ground State Energy: %f\n",GroundState);
 
@@ -161,7 +166,7 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 
 		#if !Oscillator_flip
 
-		temp_State[0][j] = old_state[0][j] - (0.5*t_step * Harmonic_Potential(old_state[1][j],old_state[1][j+1],old_state[1][j-1],m,mu,a));
+		temp_State[0][j] = old_state[0][j] - (0.5 * t_step * Harmonic_Potential(old_state[1][j],old_state[1][j+1],old_state[1][j-1],m,mu,a));
 
 		#endif
 
@@ -262,12 +267,14 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 			temp_State[0][length-1] = temp_State[0][length-1] - (0.5*t_step * Harmonic_Potential(temp_State[1][length-1],temp_State[1][0],temp_State[1][length-2],m,mu,a));
 
 			#endif
+
 	H_new = lattice_Hamiltonian(temp_State,length,mu,1,m,a,f);
 
 	//metroplis update
 	double r = ((double) rand() / (RAND_MAX));
 
 	min = (1 < exp(H_old - H_new)) ? 1 : exp(H_old - H_new);
+
 	if(r < min)
 	{
 		//accept
@@ -282,6 +289,7 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 		return 1;
 		
 	}
+
 	delta_H_Average = H_old - H_new;
 
 	return 0;
