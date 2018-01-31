@@ -5,7 +5,7 @@ CFLAGS =-std=c++11 -lfftw3 -lm
 
 EXEC = HMC
 
-SRC_CPP = Main.cpp Fourier_Transform.cpp Monte_carlo.cpp stastics.cpp
+SRC_CPP = Main.cpp Fourier_Transform.cpp Monte_carlo.cpp stastics.cpp functions.cpp
 
 OBJS_CPP = $(SRC_CPP:.cpp=.o)
 

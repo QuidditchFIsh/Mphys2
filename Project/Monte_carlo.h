@@ -9,15 +9,17 @@
 #include <algorithm>
 #include <complex>
 #include <fftw3.h>
+
 #include "stastics.h"
 #include "Fourier_Transform.h"
 #include "constants.h"
+#include "functions.h"
 
 using namespace std;
 
-void lattice_Evolution(unsigned int ,double ,unsigned int ,double,double,double,double);
+void lattice_Evolution(unsigned int ,double ,unsigned int ,double,double,double,double,double);
 
-double hmcAlgorithm_Harmonic(unsigned int length,double ,double,unsigned int,double &,double,double,vector<complex<double> > &,vector<complex<double> > &,vector<complex<double> > &,vector<complex<double> > &);
+double hmcAlgorithm(unsigned int length,double ,double,unsigned int,double &,double,double,vector<complex<double> > &,vector<complex<double> > &,vector<complex<double> > &,vector<complex<double> > &,double);
 
 
 

@@ -1,18 +1,19 @@
 /*
-	Author: Aneirin John Baker 
-	Date: 18/12/17
-	Description: Script to hold all of the potentials and kinetic energies to be used in the alforithm. Here for ease of use and editing. 
+Author : Aneirin John Bake r
+Date: 31/01/2018
+Description: Script to hold all of the update method formule so that they can easily be editted.
+For the Fourier transfromed algorithm.
 */
 
 #include "functions.h"
 
-double Harmonic_Potential(double q,double q_plus,double q_minus,double m,double mu,double a)
+complex<double> Harmonic_Potential(complex<double>  q,double m,double mu,double a,double length,double j)
 {
 	//usual harmonic potential
-	return (a * mu * q) + ((m/a)*(2*q - q_minus - q_plus));
+	return q * ((mu * a) + ((m/a) * 4 * sin((PI/length) * j) * sin((PI/length) * j)));
 }
-double Anharmonic_Potential_f(double q,double q_plus,double q_minus,double m,double a,double lamba,double f)
+complex<double> Anharmonic_Potential(complex<double> q,double m,double a,double lamba,double f,double j,double length)
 {
 	//anharmonic potential with lamba and f
-	return (4*a*lamba*q*(pow(q,2)-f)) + ((m/a)*(2*q - q_minus - q_plus));
+	return q * (((m/a) * 4 * sin((PI/length) * j) * sin((PI/length) * j)) + (4 * lamba * a * ((q*q)- f)));
 }

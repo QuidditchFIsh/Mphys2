@@ -64,25 +64,30 @@ double standard_Deviation(double avg_X_Sqd, double avgX,double length )
 	return sqrt(std_dev);
 }
 
-double lattice_Hamiltonian(vector<complex<double> > p,vector<complex<double> > q,unsigned int length,double mu,double lamba,double m,double a)
+double lattice_Hamiltonian(vector<complex<double> > p,vector<complex<double> > q,unsigned int length,double mu,double lamba,double m,double a,double f)
 {
 	double H=0;
 	//loop for all sites which are not effected by periodic BC's
 #if Oscillator_flip
 	
-	for(unsigned int i=0;i<length;i++)
+	for(unsigned int i=0;i<length-1;i++)
 	{
 		H += Harmonic_hamiltonian(p[i].real(),q[i].real(),q[i+1].real(),mu,m,a);
 	}
 
+	H += Harmonic_hamiltonian(p[length].real(),q[length].real(),q[0].real(),mu,m,a);
 
 #endif
 
 #if !Oscillator_flip
-	for(unsigned int i=0;i<length;i++)
+
+	for(unsigned int i=0;i<length-1;i++)
 	{
-		H += Anarmonic_hamiltonian(p[i].real(),q[i].real(),q[i+1].real(),mu,lamba,m,a);
+		H += Anarmonic_hamiltonian(p[i].real(),q[i].real(),q[i+1].real(),lamba,m,a,f);
 	}
+	H += Anarmonic_hamiltonian(p[length].real(),q[length].real(),q[0].real(),lamba,m,a,f);
+
+
 #endif
 
 	return H;
@@ -131,16 +136,17 @@ double Harmonic_action(double q, double q_plus,double m,double a,double mu)
 {
 	return ((pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q));
 }
-double Anarmonic_hamiltonian(double p,double q,double q_plus ,double mu,double lamba,double m,double a)
+
+double Anarmonic_hamiltonian(double p,double q,double q_plus ,double lamba,double m,double a,double f)
 {
-	//return (p*p*0.5*(1/m)) + (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * ((q*q)-f)* ((q*q-f)));
-	//return (p*p*0.5*(1/m)) + ((pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba*pow(q,4)) + (a*mu*0.5*pow(q,2)));
+	return (p*p*0.5) + ((pow((q_plus - q),2) * 0.5 * (m / a)) + (a * lamba * ((q*q) - f) * ((q*q) - f)));
 }
 
 double Anarmonic_action(double q, double q_plus,double m,double a,double mu,double lamba)
 {
 	//return (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * ((q*q)-f)* ((q*q)-f));
 }
+
 double kinetic_Energy(double p)
 {
 	return (p * p * 0.5);

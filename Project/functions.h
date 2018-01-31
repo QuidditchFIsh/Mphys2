@@ -1,4 +1,11 @@
-#include <math.h>
 
-double Harmonic_Potential(double ,double ,double ,double ,double,double );
-double Anharmonic_Potential_f(double ,double ,double ,double ,double ,double,double);
+#include <math.h>
+#include <complex>
+#include "constants.h"
+
+using namespace std;
+
+
+complex<double> Harmonic_Potential(complex<double> ,double ,double ,double ,double ,double);
+
+complex<double> Anharmonic_Potential(complex<double> q,double m,double a,double lamba,double f,double j,double length);

@@ -15,7 +15,7 @@ int main(){
 
 	//Import the data from the file which holds all the data about the simulation 
 	//in form 
-	//iterations length t_step mu lamba m a f Oscillator_flip
+	//iterations length t_step mu lamba 
 
 	vector<double> input;
 	ifstream inputFile;
@@ -37,10 +37,7 @@ int main(){
 	//Number of iterations of the HMC algorithm to be performed, and number of times the algoirthm is going to loop
 	unsigned int iterations = (unsigned int)input[0],length = (unsigned int)input[1];
 
-	double t_step=input[2],mu=input[3],lamba=input[4],m = input[5],a = input[6];
-
-	//f = input[7];
-
+	double t_step=input[2],mu=input[3],lamba=input[4],m = input[5],a = input[6],f = input[7];
 
 	printf("##########Simulation Parameters##########\n");
 	printf("\n");
@@ -48,11 +45,17 @@ int main(){
 	printf("\n");
 	printf("##########Equation Parameters############\n");
 	printf("\n");
+
+#if Oscillator_flip
 	printf("Lattice Spacing:	%f\nMass:   		%f\nmu^2:			%f\nLamba:  		%f\n",a,m,mu,lamba);
+#endif
+#if !Oscillator_flip
+	printf("Lattice Spacing:	%f\nMass:   		%f\nmu^2:			%f\nLamba:  		%f\nf:			%f\n",a,m,0.0,1.0,f);
+#endif
 
 
 	t1=clock();
-	lattice_Evolution(length,t_step,iterations,mu,lamba,m,a);
+	lattice_Evolution(length,t_step,iterations,mu,lamba,m,a,f);
 	t2=clock();
 	
 	float seconds =((float)t2-(float)t1)/(CLOCKS_PER_SEC);
