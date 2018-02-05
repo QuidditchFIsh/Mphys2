@@ -49,7 +49,7 @@ printf("\n");
  	uniform_real_distribution<double> Udistribution(0.0,1.0);
 
  	double acceptance  =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =2000,burn=2000;
+ 	unsigned int steps =10000,burn=2000;
 
 
 //initalise the first state of the siulation 
@@ -274,7 +274,7 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 	H_new = lattice_Hamiltonian(temp_State,length,mu,1,m,a,f);
 
 	FILE* out_H;
-	out_H = fopen("HMC_H1","w");
+	out_H = fopen("HMC_H_Harmonic","w");
 
 	for(int k=0;k<steps;k++)
 	{
