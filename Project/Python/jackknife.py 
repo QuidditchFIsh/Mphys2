@@ -1,0 +1,72 @@
+from numpy import *
+import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
+import statistics 
+from array import *
+import math
+from matplotlib import gridspec
+
+
+
+#initalise arrays and variables
+avgx=[];avgx2=[];action=[];KE=[];delta_h=[];i=[];avgx4=[];jjj=[]
+sum1=0;sum2=0;sum3=0;sum4=0;sum5=0;sum6=0
+sum12=0;sum22=0;sum32=0;sum42=0;sum52=0;sum62=0
+temp =0
+
+#import all data from the file
+file  = open("HMC_Stats.dat",'r')
+
+
+for line in file:
+	a,b,c,d,e,f,gg = line.split(' ', 6)
+	avgx.append(float(b))
+	avgx2.append(float(d))
+	avgx2err.append(float(e))
+	action.append(float(f))
+	delta_h.append(float(c))
+
+#stats calculations
+length = len(i)
+for j in range(0,length):
+	sum1 += avgx[j]
+	sum2 += avgx2[j]
+	sum3 += action[j]
+	sum5 += delta_h[j]
+	
+	sum12 += avgx[j] * avgx[j]
+	sum22 += avgx2[j] * avgx2[j]
+	sum32 += action[j] * action[j]
+	sum52 += delta_h[j] * delta_h[j]
+
+Ex  = sum1/length
+Ex2 = sum2/length
+
+#jackknife range (example 20000 into bins of 100)
+JKwidth  = 200
+JKrange  = len(avgx) / JKwidth #should be 100 N_B here
+JKarray  = []
+JKarrayc = []
+JKsum    = 0
+JKvar    =0
+
+for i in range(0,JKrange):
+	for j in range(0,200):
+		JKsum += avgx2[(200 * i) + j]
+	JKsum = JKsum / 200
+	JKarray.append(JKsum)
+	JKsum = 0
+
+#should now have an aray of estimates each from a sample of JKrange (in this example case 100)
+#Now need to work out the complimentary bin estimates
+cWidth = length - JKwidth
+for i in range(0,JKrange):
+	JKarrayc.append((Ex2 -(JKwidth *JKarray[i]))/cWidth)
+
+# now using the complimentary bin values calcuate the varience
+for i in range(0,JKrange):
+	JKvar += (JKarrayc[i] - Ex2)**2
+
+JKvar = JKvar * ((JKrange -1) / JKrange)
+

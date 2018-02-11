@@ -1,8 +1,14 @@
-#include <vector>
-#include <complex>
 #include <stdlib.h>
 #include <stdio.h>
 #include <random>
+#include <iostream>
+#include <string>
+#include <ctime>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <complex>
+#include <fftw3.h>
 
 using namespace std;
 

@@ -14,6 +14,7 @@
 #include "Fourier_Transform.h"
 #include "constants.h"
 #include "functions.h"
+#include "progress-cpp/ProgressBar.hpp"
 
 using namespace std;
 

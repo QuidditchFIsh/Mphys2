@@ -18,6 +18,7 @@
 #define ZERO complex<double>(0,0)
 #define PI 3.14159265
 #define PI2 6.28318530718
-#define Oscillator_flip 1 //1 - harmonic 0-Anharmonic
+#define Output_Stats 1
+#define Output_X 0
 
 //extern double f=0;

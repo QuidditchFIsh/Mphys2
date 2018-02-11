@@ -32,7 +32,7 @@ for line in file:
 	delta_h.append(float(c))
 	#avgx4.append(float(c))
 
-dataX=np.genfromtxt("HMC_Final_X.dat", unpack=True)
+#dataX=np.genfromtxt("HMC_Final_X.dat", unpack=True)
 #print(data)
 
 #stats calculations
