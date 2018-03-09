@@ -23,11 +23,7 @@ double lattice_Action(vector<complex<double> > ,unsigned int,double,double,doubl
 
 double lattice_KineticEnergy(vector<complex<double> >,unsigned int);
 
-double Harmonic_hamiltonian(double ,double ,double,double,double,double);
-
 double Harmonic_action(double,double,double ,double,double);
-
-double Anarmonic_hamiltonian(double ,double ,double,double,double,double,double);
 
 double Anarmonic_action(double,double,double,double,double,double);
 

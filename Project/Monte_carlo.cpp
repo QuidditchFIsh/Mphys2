@@ -38,14 +38,6 @@ printf("Running in Harmonic Mode\n");
 printf("Running in Anharmonic Mode\n");
 #endif
 
-	// FILE * output_stats;
-	// output_stats = fopen("HMC_Stats.dat","w");
-
-	// FILE * output_X;
-	// output_X = fopen("HMC_X.dat","w");
-
-	// FILE * output_X1;
-	// output_X1 = fopen("HMC_Final_X.dat","w");
 
 //create vectors of complex numbers one for each p and q for convience and clarity in the fourier transform 
 	vector<complex<double> > p(length,ZERO);
@@ -57,6 +49,18 @@ printf("Running in Anharmonic Mode\n");
  	normal_distribution<double> distribution(0.0,1.0);
 
  	uniform_real_distribution<double> Udistribution(0.0,1.0);
+
+ 	vetor<normal_distribution<double> > generators;
+ 	double varience =0;
+
+
+//check there is now way to make this more efficent ie don't look over all of l only loop over half of it !!!
+ 	for(unsigned int j=0;j<lengthlj++;j++)
+ 	{
+ 		varience = 1/ ( 1 + ((4 * m / a) * sin((PI/length) * j) * sin((PI/length) * j)));
+ 		normal_distribution<double> distribution(0.0,varience);
+ 		generators.push_back(distribution);
+ 	}
 
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
@@ -78,9 +82,16 @@ printf("Running in Anharmonic Mode\n");
  	for(unsigned int i = 0; i<iterations;i++)
  	{
  		default_random_engine generator(random_device{}());
- 		for(unsigned int j = 0; j<length;j++)
+
+ 		//NEED TO ONLY DO THIS FOR L/2	
+ 		for(unsigned int j = 0; j<length/2;j++)
  		{
- 			p[j] = distribution(generator) * ONE;
+ 			//p[j] = distribution(generator) * ONE;
+ 			p[j] = (generators[j](generator) * ONE) + (generators[j](generator) * I) ;
+ 		}
+ 		for(unsigned int j=0 j<length/2;j++)
+ 		{
+ 			p[length/2 + j] = (p[j].real() * ONE) - (p[j].imag() * I);
  		}
 
 //Start the main algorithm 
@@ -144,23 +155,16 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 
 	double min=0,H_old=0,H_new=0,H_inter=0;
 
-	vector<double> H_store(steps,0);
 
 	H_old=lattice_Hamiltonian(p,q,length,mu,1.0,m,a,f);
 
 //	Fourier transform the arrays
-	forwardTransform(p,length);
-	forwardTransform(q,length);
+	//forwardTransform(p,length);
 
 	for(unsigned int j = 0;j<length;j++)
 	{
-#if Oscillator_flip
 		p_temp[j] = p[j] - (0.5 * t_step * Harmonic_Potential(q[j],m,mu,a,length,j));
-#endif
 
-#if !Oscillator_flip
-		p_temp[j] = p[j] - (0.5 * t_step * Anharmonic_Potential(q[j],m,a,1.0,f,j,length));
-#endif
 		q_temp[j] = q[j];
 	}
 
@@ -177,50 +181,22 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 		{
 			for(unsigned int j = 0;j<length;j++)
 			{
-#if Oscillator_flip
 				p_temp[j] = p_temp[j] - (t_step  * Harmonic_Potential(q_temp[j],m,mu,a,length,j));
-#endif
 
-#if !Oscillator_flip
-				p_temp[j] = p_temp[j] - (t_step  * Anharmonic_Potential(q_temp[j],m,a,1.0,f,j,length));
-#endif
 			}
-		} 
-
-		backwardTransform(q_temp,length);
-		backwardTransform(p_temp,length);
-
-		H_store[i] = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,a,f);	
-
-		forwardTransform(p_temp,length);
-		forwardTransform(q_temp,length);		
+		} 	
 
 	}
 //half step in the p
 	for(unsigned int j = 0;j<length;j++)
 	{
-#if Oscillator_flip
 		p_temp[j] = p_temp[j] - (0.5 * t_step  * Harmonic_Potential(q_temp[j],m,mu,a,length,j));
-#endif
-
-#if !Oscillator_flip
-		p_temp[j] = p_temp[j] - (0.5 * t_step  * Anharmonic_Potential(q_temp[j],m,a,1.0,f,j,length));
-#endif
 	}
 
-
-	FILE * output_H;
-	output_H = fopen("HMC_H","w");
-	for(int k=0;k<steps;k++)
-	{
-		fprintf(output_H,"%f\n",H_store[k]);
-	}
 //#########backward fourier transform goes here#############
 
-	backwardTransform(q_temp,length);
-	backwardTransform(p_temp,length);
-	backwardTransform(p,length);
-	backwardTransform(q,length);
+	//backwardTransform(p_temp,length);
+	//backwardTransform(p,length);
 
 	H_new = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,a,f);
 	//printf("%f %f\n",H_old,H_new);

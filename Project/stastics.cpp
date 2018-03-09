@@ -68,27 +68,23 @@ double lattice_Hamiltonian(vector<complex<double> > p,vector<complex<double> > q
 {
 	double H=0;
 	//loop for all sites which are not effected by periodic BC's
-#if Oscillator_flip
-	
-	for(unsigned int i=0;i<length-1;i++)
+	//only working on the harmonic oscillator for this one so don't need any other functions other than this one
+	//p's come in in fourier space , q's come in in position space
+	vector<complex<double> > p_temp(length,ZERO);
+
+	for(int i=0;i<length;i++)
 	{
-		H += Harmonic_hamiltonian(p[i].real(),q[i].real(),q[i+1].real(),mu,m,a);
+		p_temp[i] = norm(p[i]) / (1 + ((4/a) * sin((PI/length) * j) * sin((PI/length) * j)))
 	}
 
-	H += Harmonic_hamiltonian(p[length].real(),q[length].real(),q[0].real(),mu,m,a);
+	backwardTransform(p_temp,length);
 
-#endif
+	//now everything is in position space can add up the hamiltonian
 
-#if !Oscillator_flip
-
-	for(unsigned int i=0;i<length-1;i++)
+	for(int i = 0; i < length; i++)
 	{
-		H += Anarmonic_hamiltonian(p[i].real(),q[i].real(),q[i+1].real(),lamba,m,a,f);
+		H += (q[i].real() * q[i].real() * mu * 0.5 ) + p_temp[i].real();
 	}
-	H += Anarmonic_hamiltonian(p[length].real(),q[length].real(),q[0].real(),lamba,m,a,f);
-
-
-#endif
 
 	return H;
 
@@ -126,21 +122,11 @@ double lattice_KineticEnergy(vector<complex<double> > p,unsigned int length)
 }
 
 
-double Harmonic_hamiltonian(double p,double q,double q_plus,double mu,double m,double a)
-{
-	//regular version
-	return (p*p*0.5) + ((pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q));
-}
-
 double Harmonic_action(double q, double q_plus,double m,double a,double mu)
 {
 	return ((pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q));
 }
 
-double Anarmonic_hamiltonian(double p,double q,double q_plus ,double lamba,double m,double a,double f)
-{
-	return (p*p*0.5) + ((pow((q_plus - q),2) * 0.5 * (m / a)) + (a * lamba * ((q*q) - f) * ((q*q) - f)));
-}
 
 double Anarmonic_action(double q, double q_plus,double m,double a,double mu,double lamba)
 {
