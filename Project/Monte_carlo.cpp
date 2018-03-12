@@ -38,6 +38,11 @@ printf("Running in Harmonic Mode\n");
 printf("Running in Anharmonic Mode\n");
 #endif
 
+	FILE * output_stats;
+	output_stats = fopen("HMC_Stats.dat","w");
+
+//ProgressBar progress_bar(iterations,"Example 1");
+
 
 //create vectors of complex numbers one for each p and q for convience and clarity in the fourier transform 
 	vector<complex<double> > p(length,ZERO);
@@ -50,21 +55,21 @@ printf("Running in Anharmonic Mode\n");
 
  	uniform_real_distribution<double> Udistribution(0.0,1.0);
 
- 	vetor<normal_distribution<double> > generators;
+ 	vector<normal_distribution<double> > generators;
  	double varience =0;
 
 
 //check there is now way to make this more efficent ie don't look over all of l only loop over half of it !!!
- 	for(unsigned int j=0;j<lengthlj++;j++)
+ 	for(unsigned int j=0;j<length;j++)
  	{
- 		varience = 1/ ( 1 + ((4 * m / a) * sin((PI/length) * j) * sin((PI/length) * j)));
+ 		varience = ( 1 + ((4 * m / a) * sin((PI/length) * j * a) * sin((PI/length) * j * a)));
  		normal_distribution<double> distribution(0.0,varience);
  		generators.push_back(distribution);
  	}
 
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =2000,burn=0;
+ 	unsigned int steps =20,burn=0;
 
 
 
@@ -87,9 +92,9 @@ printf("Running in Anharmonic Mode\n");
  		for(unsigned int j = 0; j<length/2;j++)
  		{
  			//p[j] = distribution(generator) * ONE;
- 			p[j] = (generators[j](generator) * ONE) + (generators[j](generator) * I) ;
+ 			p[j] = (generators[j](generator) * ONE) + (generators[j](generator) * I);
  		}
- 		for(unsigned int j=0 j<length/2;j++)
+ 		for(unsigned int j=0 ;j<length/2;j++)
  		{
  			p[length/2 + j] = (p[j].real() * ONE) - (p[j].imag() * I);
  		}
@@ -97,7 +102,11 @@ printf("Running in Anharmonic Mode\n");
 //Start the main algorithm 
  
  		acceptance += hmcAlgorithm(length,t_step,mu,steps,delta_H_Average,m,a,p,q,p_temp,q_temp,f);
-
+ 		// if(i % 100 == 0)
+ 		// {
+ 		// 	printf("%d\n",i);
+ 		// }
+ 	//	progress_bar.Progressed(i);
 //perform the stats calculations for the raw data
 
 		temp_avgx = avgX(q);
@@ -110,7 +119,7 @@ printf("Running in Anharmonic Mode\n");
  		avgx +=temp_avgx;
  		avgx2 +=temp_avgx2;
  		avgx4 += temp_avgx4;
- 	// 	fprintf(output_stats,"%d %f %f %f %f %f \n",i,temp_avgx,delta_H_Average,temp_avgx2,lattice_Action(q,length,m,a,mu,lamba),lattice_KineticEnergy(p,length));
+ 	 	fprintf(output_stats,"%d %f %f %f %f %f \n",i,temp_avgx,delta_H_Average,temp_avgx2,lattice_Action(q,length,m,a,mu,lamba),lattice_KineticEnergy(p,length));
  	 	}
  	// 	for(unsigned int l=0;l<length;l++)
 		// {
@@ -161,6 +170,9 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 //	Fourier transform the arrays
 	//forwardTransform(p,length);
 
+	//backward transform the p's
+	backwardTransform(p,length);
+
 	for(unsigned int j = 0;j<length;j++)
 	{
 		p_temp[j] = p[j] - (0.5 * t_step * Harmonic_Potential(q[j],m,mu,a,length,j));
@@ -172,6 +184,18 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 	for(unsigned int i = 0;i<steps;i++)
 	{
 //update all q's
+		//transform to fourie soace 
+		forwardTransform(p_temp,length);
+
+			//CALCULATE THE P's IN FOURIER SPACE
+		for(int j=0;j<length;j++)
+		{
+			p_temp[j] = p_temp[j] / (1 + ((4/a) * sin((PI/length) * j) * sin((PI/length) * j)));
+		}
+
+		backwardTransform(p_temp,length);
+
+	//transform them back to positon space to update the 
 		for(unsigned int j = 0;j<length;j++)
 		{
 			q_temp[j] = q_temp[j] + (t_step * p_temp[j]);
@@ -197,6 +221,8 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 
 	//backwardTransform(p_temp,length);
 	//backwardTransform(p,length);
+
+	forwardTransform(p_temp,length);
 
 	H_new = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,a,f);
 	//printf("%f %f\n",H_old,H_new);

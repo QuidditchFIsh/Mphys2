@@ -15,6 +15,8 @@
 #include "constants.h"
 #include "functions.h"
 
+#include "cpp_progress_bar/progress_bar.hpp"
+
 using namespace std;
 
 void lattice_Evolution(unsigned int ,double ,unsigned int ,double,double,double,double,double);
