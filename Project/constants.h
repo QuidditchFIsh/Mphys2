@@ -7,7 +7,7 @@
 	the extern keyword used to define f makes it available to all other scripts which
 	this class is a header in. (think this doesn't work)
 */
-#define Oscillator_flip 0 //0-Harmonic 1-Anharmonic
+#define Oscillator_flip 1 //0-Harmonic 1-Anharmonic
 #define OutPut 1 //0-No 1-Yes
 
 //extern double f=0;
