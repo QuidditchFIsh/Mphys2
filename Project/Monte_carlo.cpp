@@ -38,6 +38,13 @@ printf("Running in Harmonic Mode\n");
 printf("Running in Anharmonic Mode\n");
 #endif
 
+	FILE * output_stats;
+	output_stats = fopen("HMC_Stats.dat","w");
+
+	FILE * output_X;
+	output_X = fopen("HMC_X.dat","w");
+
+
 
 //create vectors of complex numbers one for each p and q for convience and clarity in the fourier transform 
 	vector<complex<double> > p(length,ZERO);
@@ -57,14 +64,14 @@ printf("Running in Anharmonic Mode\n");
 //check there is now way to make this more efficent ie don't look over all of l only loop over half of it !!!
  	for(unsigned int j=0;j<length;j++)
  	{
- 		varience = 1/ ( 1 + ((4 * m / a) * sin((PI/length) * j) * sin((PI/length) * j)));
+ 		varience = 1/ ( 1 + ((4/(a*a)) * sin((PI/length) * j) * sin((PI/length) * j)));
  		normal_distribution<double> distribution(0.0,varience);
  		generators.push_back(distribution);
  	}
 
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =20,burn=0;
+ 	unsigned int steps =5,burn=0;
 
 
 
@@ -89,14 +96,19 @@ printf("Running in Anharmonic Mode\n");
  			//p[j] = distribution(generator) * ONE;
  			p[j] = (generators[j](generator) * ONE) + (generators[j](generator) * I) ;
  		}
- 		for(unsigned int j=0; j<length/2;j++)
+ 		for(unsigned int j=0; j<length/2 ;j++)
  		{
  			p[length/2 + j] = (p[j].real() * ONE) - (p[j].imag() * I);
  		}
+ 		// for(int j=0;j<length;j++)
+ 		// {
+ 		// 	printf("%f %f ",p[j].real(),p[j].imag());
+ 		// }
+ 		// printf("\n");
 
 //Start the main algorithm 
  
- 		acceptance += hmcAlgorithm(length,t_step,mu,steps,delta_H_Average,m,a,p,q,p_temp,q_temp,f);
+ 		acceptance += hmcAlgorithm(length,t_step,1.0,steps,delta_H_Average,1.0,1.0,p,q,p_temp,q_temp,f);
 
 //perform the stats calculations for the raw data
 
@@ -110,13 +122,13 @@ printf("Running in Anharmonic Mode\n");
  		avgx +=temp_avgx;
  		avgx2 +=temp_avgx2;
  		avgx4 += temp_avgx4;
- 	// 	fprintf(output_stats,"%d %f %f %f %f %f \n",i,temp_avgx,delta_H_Average,temp_avgx2,lattice_Action(q,length,m,a,mu,lamba),lattice_KineticEnergy(p,length));
+ 	 	fprintf(output_stats,"%d %f %f %f %f %f \n",i,temp_avgx,delta_H_Average,temp_avgx2,lattice_Action(q,length,m,a,mu,lamba),lattice_KineticEnergy(p,length));
  	 	}
- 	// 	for(unsigned int l=0;l<length;l++)
+ 	//  	for(unsigned int l=0;l<length;l++)
 		// {
- 	// 		fprintf(output_X,"%f ",q[l].real());
- 	// 	}
- 	// 	fprintf(output_X,"\n");
+ 	//  		fprintf(output_X,"%f ",q[l].real());
+ 	//  	}
+ 	//  	fprintf(output_X,"\n");
  		
 
  	}
@@ -149,7 +161,7 @@ printf("Running in Anharmonic Mode\n");
 
 
 }
-
+/*
 double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > &p,vector<complex<double> > &q,vector<complex<double> > &p_temp,vector<complex<double> > &q_temp,double f)
 {
 
@@ -202,6 +214,169 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 	//printf("%f %f\n",H_old,H_new);
 //metroplis update
 	double r = ((double) rand() / (RAND_MAX));
+
+	min = (1 < exp(H_old - H_new)) ? 1 : exp(H_old - H_new);
+	if(r < min)
+	{
+//accept
+		for(unsigned int i = 0;i<length;i++)
+		{
+			q[i] = q_temp[i];
+			
+		}
+
+		delta_H_Average= H_old - H_new;
+
+		return 1;
+		
+	}
+	delta_H_Average = H_old - H_new;
+
+	return 0;
+	
+}
+*/
+
+double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > &p,vector<complex<double> > &q,vector<complex<double> > &p_temp,vector<complex<double> > &q_temp,double f)
+{
+
+	double min=0,H_old=0,H_new=0;
+
+
+// 	printf("Before\n");
+// 	printf("p: ");
+// for(int j=0;j<length;j++)
+// {
+// 	printf("%f %f ",p[j].real(),p[j].imag());
+// }
+// printf("\n");
+// printf("q: ");
+// for(int j=0;j<length;j++)
+// {
+// 	printf("%f %f ",q[j].real(),q[j].imag());
+// }
+// printf("\n");
+// printf("############################\n");
+
+
+	backwardTransform(p,length);
+
+	H_old=lattice_Hamiltonian(p,q,length,mu,1.0,m,1.0,f);
+	//printf("%f\n",H_old);
+
+	forwardTransform(p,length);
+
+//calculate the new p's
+for (unsigned int j=0;j<length;j++)
+{
+	p_temp[j] = abs(p[j]) / (1 + ((4/(a*a)) * sin((PI/length) * j) * sin((PI/length) * j)));
+	q_temp[j] = q[j];
+}
+
+	backwardTransform(p_temp,length);
+
+// half update the q's
+// 		printf("p: ");
+// for(int j=0;j<length;j++)
+// {
+// 	printf("%f %f ",p[j].real(),p[j].imag());
+// }
+// printf("\n");
+for(unsigned int j=0;j<length;j++)
+{
+	q_temp[j] = q_temp[j] + (0.5 * t_step * p_temp[j]);
+}
+
+
+
+for(unsigned int k = 0;k < steps;k++)
+{
+//update the p's
+	for(unsigned int j=0;j<length;j++)
+	{
+		//p_temp[j] = p_temp[j] - 4 * t_step * a * 1 * q_temp[j] * ((q_temp[j] * q_temp[j]) - f);
+		p_temp[j] = p_temp[j] - (t_step* mu * a * q_temp[j]);
+	}
+
+	if( k != steps-1)
+	{
+		forwardTransform(p_temp,length);
+	
+
+//calculate the new p's
+		for(unsigned int j=0;j<length;j++)
+		{
+			p_temp[j] = abs(p_temp[j]) / (1 + ((4/(a*a)) * sin((PI/length) * j) * sin((PI/length) * j)));
+		
+		}
+
+			backwardTransform(p_temp,length);
+
+//update the q's
+
+		for(unsigned int j=0;j<length;j++)
+		{
+			q_temp[j] = q_temp[j] + (t_step * p_temp[j]);
+		}
+	}
+// 	printf("p:");
+// 	for(int j=0;j<length;j++)
+// {
+// 	printf("%f %f ",p_temp[j].real(),p_temp[j].imag());
+// }
+// printf("\n");
+// printf("q: ");
+// for(int j=0;j<length;j++)
+// {
+// 	printf("%f %f ",q_temp[j].real(),q_temp[j].imag());
+// }
+// printf("\n");
+// printf("############################\n");
+}
+
+	forwardTransform(p_temp,length);
+
+	//calculate the new p's
+	for (unsigned int j=0;j<length;j++)
+	{
+		p_temp[j] = abs(p_temp[j]) / (1 + ((4 /(a*a)) * sin((PI/length) * j) * sin((PI/length) * j)));
+
+	}
+
+	backwardTransform(p_temp,length);
+
+	// half update the q's
+	for(unsigned int j=0;j<length;j++)
+	{
+		q_temp[j] = q_temp[j] + (0.5 * t_step * p_temp[j]);
+	}
+	forwardTransform(p_temp,length);
+
+	H_new = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,1.0,f);
+	//printf("%f\n",H_new);
+	//printf("##################\n");
+
+//metroplis update
+	double r = ((double) rand() / (RAND_MAX));
+
+
+// 	printf("After\n");
+// 	printf("p: ");
+// for(int j=0;j<length;j++)
+// {
+// 	printf("%f %f ",p_temp[j].real(),p_temp[j].imag());
+// }
+// printf("\n");
+// printf("q: ");
+// for(int j=0;j<length;j++)
+// {
+// 	printf("%f %f ",q_temp[j].real(),q_temp[j].imag());
+// }
+// printf("\n");
+// printf("############################\n");
+// printf("-----------------------\n");
+
+
 
 	min = (1 < exp(H_old - H_new)) ? 1 : exp(H_old - H_new);
 	if(r < min)

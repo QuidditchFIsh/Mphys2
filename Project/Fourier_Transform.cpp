@@ -37,8 +37,9 @@ void forwardTransform(vector<complex<double> > &in_vector,int length)
 void backwardTransform(vector<complex<double> > &in_vector,int length)
 {
 	//define array which is to be outputted
-	fftw_complex out[length];
+	//fftw_complex out[length];
 	fftw_complex in[length];
+	double out[length];
 
 	for(int i=0;i<length;i++)
 	{
@@ -47,8 +48,9 @@ void backwardTransform(vector<complex<double> > &in_vector,int length)
 	}
 
 	//create plan
-	fftw_plan backward = fftw_plan_dft_1d(length,in,out,FFTW_BACKWARD,FFTW_ESTIMATE);
-
+	//fftw_plan backward = fftw_plan_dft_1d(length,in,out,FFTW_BACKWARD,FFTW_ESTIMATE);
+	fftw_plan backward = fftw_plan_dft_c2r_1d(length,in,out,FFTW_ESTIMATE);
+	
 	//execute fourier transform 
 	fftw_execute(backward);
 
@@ -57,12 +59,15 @@ void backwardTransform(vector<complex<double> > &in_vector,int length)
 	
 	for(int i=0;i<length;i++)
 	{
-		out[i][REAL] /= length;
-		out[i][IMAG] /= length;
+		//out[i][REAL] /= (double)length;
+		//out[i][IMAG] /= (double)length;
+		out[i] /= (double)length;
 	}
 	for(int i=0;i<length;i++)
 	{
-		in_vector[i] = 	(out[i][REAL] * ONE) + (out[i][IMAG] * I);
+		//in_vector[i] = 	(out[i][REAL] * ONE) + (out[i][IMAG] * I);
+		in_vector[i] = out[i] * ONE;
+
 	}
 
 }

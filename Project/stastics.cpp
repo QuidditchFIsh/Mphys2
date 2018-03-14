@@ -70,21 +70,22 @@ double lattice_Hamiltonian(vector<complex<double> > p,vector<complex<double> > q
 	//loop for all sites which are not effected by periodic BC's
 	//only working on the harmonic oscillator for this one so don't need any other functions other than this one
 	//p's come in in fourier space , q's come in in position space
-	vector<complex<double> > p_temp(length,ZERO);
+	vector<complex<double> > p_temp1(length,ZERO);
 
 	for(int i=0;i<length;i++)
 	{
-		p_temp[i] = abs(p[i]) / (1 + ((4/a) * sin((PI/length) * i) * sin((PI/length) * i)));
+		p_temp1[i] = (norm(p[i])) / (1 + ((4/(a*a)) * sin((PI/length) * i) * sin((PI/length) * i)));
 	}
 
-	backwardTransform(p_temp,length);
+	backwardTransform(p_temp1,length);
 
 	//now everything is in position space can add up the hamiltonian
 
 	for(int i = 0; i < length; i++)
 	{
-		H += (q[i].real() * q[i].real() * mu * 0.5 ) + p_temp[i].real();
+		H += (q[i].real() * q[i].real() * mu * 0.5 ) + (p_temp1[i].real()*0.5);
 	}
+	//printf("Hamiltonian =%f\n",H);
 
 	return H;
 
