@@ -50,12 +50,12 @@ printf("Running in Anharmonic Mode\n");
 
  	uniform_real_distribution<double> Udistribution(0.0,1.0);
 
- 	vetor<normal_distribution<double> > generators;
+ 	vector<normal_distribution<double> > generators;
  	double varience =0;
 
 
 //check there is now way to make this more efficent ie don't look over all of l only loop over half of it !!!
- 	for(unsigned int j=0;j<lengthlj++;j++)
+ 	for(unsigned int j=0;j<length;j++)
  	{
  		varience = 1/ ( 1 + ((4 * m / a) * sin((PI/length) * j) * sin((PI/length) * j)));
  		normal_distribution<double> distribution(0.0,varience);
@@ -64,7 +64,7 @@ printf("Running in Anharmonic Mode\n");
 
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =2000,burn=0;
+ 	unsigned int steps =20,burn=0;
 
 
 
@@ -89,7 +89,7 @@ printf("Running in Anharmonic Mode\n");
  			//p[j] = distribution(generator) * ONE;
  			p[j] = (generators[j](generator) * ONE) + (generators[j](generator) * I) ;
  		}
- 		for(unsigned int j=0 j<length/2;j++)
+ 		for(unsigned int j=0; j<length/2;j++)
  		{
  			p[length/2 + j] = (p[j].real() * ONE) - (p[j].imag() * I);
  		}

@@ -74,7 +74,7 @@ double lattice_Hamiltonian(vector<complex<double> > p,vector<complex<double> > q
 
 	for(int i=0;i<length;i++)
 	{
-		p_temp[i] = norm(p[i]) / (1 + ((4/a) * sin((PI/length) * j) * sin((PI/length) * j)))
+		p_temp[i] = abs(p[i]) / (1 + ((4/a) * sin((PI/length) * i) * sin((PI/length) * i)));
 	}
 
 	backwardTransform(p_temp,length);
