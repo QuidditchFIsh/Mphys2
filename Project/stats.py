@@ -39,7 +39,7 @@ for line in file:
 	delta_h.append(float(c))
 	avgx4.append(float(hh))
 
-dataX=np.genfromtxt("HMC_X.dat", unpack=True)
+dataX=np.genfromtxt("HMC_X1.dat", unpack=True)
 #print(data)
 
 #stats calculations
@@ -119,7 +119,7 @@ for j in range(2,len(avgx)-1):
 	xerr.append(sqrt((Mavgx2[j] - (Mavgx[j] * Mavgx[j]))/(j-1)))
 	x2err.append(sqrt((Mavgx4[j] - (Mavgx2[j] * Mavgx2[j]))/(j-1)))
 
-
+'''
 ###########################END SECTION##############################
 
 
@@ -225,13 +225,33 @@ if(oscillator_flip==1):
 	m.savefig("graphs/Average_DeltaH_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	m.savefig("graphs/Average_DeltaH_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
+'''
 
+#################################ANALYSIS ON DATAX############################################
+'''
+xAvg = []
+avg =0
+sum =0
+for i in range(0,2000):
+	for j in range(0,79):
+		avg += dataX[i][j]
+	avg = avg/80
+	xAvg.append(avg)
+	sum += avg
+	avg =0
+print (sum)
+#print (xAvg)
+'''
+
+#########################################END SECTION####################################
 n=plt.figure()
-#w = 1.00124922
-#x = np.linspace(-3,3,200) # 100 linearly spaced numbers
-#y = ((w/(3.141592654))**0.5)*np.exp(-w*(x**2))
-#plt.plot(x,y)
-plt.hist(dataX,bins=100,normed=1)
+w  = 1.057371263
+x  = np.linspace(-3,3,200) # 100 linearly spaced numbers
+y  = ((1/(3.141592654))**0.5)*np.exp(-1*(x**2))
+y1 = ((w/(3.141592654))**0.5)*np.exp(-w*(x**2))
+plt.plot(x,y)
+plt.plot(x,y1)
+plt.hist(dataX,bins=50,normed=1)
 plt.xlabel("x")
 plt.ylabel("|psi|^2")
 plt.title("Anharmonic Wavefunction for mu=-4 lamba =0.1")
