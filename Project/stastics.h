@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <complex>
 #include <fftw3.h>
+
 #include "constants.h"
 #include "Fourier_Transform.h"
 

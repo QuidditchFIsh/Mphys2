@@ -10,8 +10,12 @@ For the Fourier transfromed algorithm.
 complex<double> Harmonic_Potential(complex<double>  q,double m,double mu,double a,double length,double j)
 {
 	//usual harmonic potential
+<<<<<<< HEAD
 	//return q * ((mu * a) + ((m/a) * 4 * sin((PI/length) * j) * sin((PI/length) * j)));
 	return q * mu;
+=======
+	return q * ((mu * a) + ((4/a)  * sin((PI/length) * j) * sin((PI/length) * j)));
+>>>>>>> 345c8d89f970c9f85a54974344548e68d1f3427f
 }
 complex<double> Anharmonic_Potential(complex<double> q,double m,double a,double lamba,double f,double j,double length)
 {
