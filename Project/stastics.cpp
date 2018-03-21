@@ -79,7 +79,7 @@ double lattice_Hamiltonian(vector<complex<double> > p,vector<complex<double> > q
 
 	}
 
-	backwardTransform(p_temp1,length);
+	backwardTransform(p_temp1,length,a);
 
 	//now everything is in position space can add up the hamiltonian
 

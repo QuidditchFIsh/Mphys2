@@ -74,7 +74,7 @@ printf("Running in Anharmonic Mode\n");
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
 
- 	unsigned int steps =5,burn=0;
+ 	unsigned int steps =20,burn=0;
 
 //initalise the first state of the siulation 
  	for(unsigned int j=0;j<length;j++)
@@ -114,6 +114,10 @@ printf("Running in Anharmonic Mode\n");
  
 
  		acceptance += hmcAlgorithm(length,t_step,1.0,steps,delta_H_Average,1.0,1.0,p,q,p_temp,q_temp,f);
+ 		if(i%10 ==0)
+ 		{
+ 			printf("%d\n",i);
+ 		}
 
 //perform the stats calculations for the raw data
 
@@ -281,12 +285,12 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 // printf("############################\n");
 
 
-	backwardTransform(p,length);
+	backwardTransform(p,length,a);
 
 	H_old=lattice_Hamiltonian(p,q,length,mu,1.0,m,1.0,f);
 	//printf("%f\n",H_old);
 
-	forwardTransform(p,length);
+	forwardTransform(p,length,a);
 
 //calculate the new p's
 for (unsigned int j=0;j<length;j++)
@@ -295,7 +299,7 @@ for (unsigned int j=0;j<length;j++)
 	q_temp[j] = q[j];
 }
 
-	backwardTransform(p_temp,length);
+	backwardTransform(p_temp,length,a);
 
 // half update the q's
 // 		printf("p: ");
@@ -322,7 +326,7 @@ for(unsigned int k = 0;k < steps;k++)
 
 	if( k != steps-1)
 	{
-		forwardTransform(p_temp,length);
+		forwardTransform(p_temp,length,a);
 	
 
 //calculate the new p's
@@ -332,7 +336,7 @@ for(unsigned int k = 0;k < steps;k++)
 		
 		}
 
-			backwardTransform(p_temp,length);
+			backwardTransform(p_temp,length,a);
 
 //update the q's
 
@@ -356,7 +360,7 @@ for(unsigned int k = 0;k < steps;k++)
 // printf("############################\n");
 }
 
-	forwardTransform(p_temp,length);
+	forwardTransform(p_temp,length,a);
 
 	//calculate the new p's
 	for (unsigned int j=0;j<length;j++)
@@ -365,14 +369,14 @@ for(unsigned int k = 0;k < steps;k++)
 
 	}
 
-	backwardTransform(p_temp,length);
+	backwardTransform(p_temp,length,a);
 
 	// half update the q's
 	for(unsigned int j=0;j<length;j++)
 	{
 		q_temp[j] = q_temp[j] + (0.5 * t_step * p_temp[j]);
 	}
-	forwardTransform(p_temp,length);
+	forwardTransform(p_temp,length,a);
 
 	H_new = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,1.0,f);
 	//printf("%f\n",H_new);

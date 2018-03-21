@@ -9,12 +9,13 @@ https://www2.ph.ed.ac.uk/~s0948358/mysite/Intro-LQCD-basics.pdf
 
 int main()
 {
-	vector<complex<double> > test(10,ONE);
+	vector<complex<double> > test(10,I);
 
 	for (int i=0;i<10;i++)
 	{
 		printf("%f %f\n",test[i].real(),test[i].imag());
 	}
+	printf("\n");
 	Forward_Transform(test,10,1);
 	// for (int i=0;i<10;i++)
 	// {
@@ -22,13 +23,17 @@ int main()
 	// }
 
 	return 1;
+
 }
 
 void Forward_Transform(vector<complex<double> > &input,unsigned int length,double a)
 {
-	//create a tempoary complex vector to keep it in
-	double real =0,complex=0,argument=0;
-	double N = (double) length;
+	 //create a tempoary complex vector to keep it in
+	//vector<std::complex<double> out(length,Zero)
+	 double real =0,complex=0,argument=0;
+	 double N = (double) length;
+	 //std::complex<double> tmp(1,0);
+
 
 	//loop over the length of the latice for the fourier transform wiriting everything in terms of cos and sine 
 	for(unsigned int i = 0;i < length;i++)
@@ -41,8 +46,11 @@ void Forward_Transform(vector<complex<double> > &input,unsigned int length,doubl
 		}
 		real *= a;
 		complex *= a;
-		printf("%f %f\n",real,complex);
-		input[i] = (real * (ONE)) + (complex * I);
+		printf("first:%f %f\n",real,complex);
+		input[i] = (real * ONE) + (complex * I);
+		//tmp = tmp * real;
+		//printf("Second:%f %f %f\n",real,tmp.real(),tmp.imag());
+		//input[i] = real * tmpR;
 		real =0;
 		complex=0;
 	}

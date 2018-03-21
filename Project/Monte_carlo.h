@@ -15,7 +15,7 @@
 #include "constants.h"
 #include "functions.h"
 
-#include "cpp_progress_bar/progress_bar.hpp"
+//#include "cpp_progress_bar/progress_bar.hpp"
 
 using namespace std;
 

@@ -13,11 +13,13 @@
 
 #define REAL 0
 #define IMAG 1
-#define I complex<double>(0,1)
-#define ONE complex<double>(1,0)
-#define ZERO complex<double>(0,0)
+#define I std::complex<double>(0,1)
+#define ONE std::complex<double>(1,0)
+#define ZERO std::complex<double>(0,0)
 #define PI 3.14159265
 #define PI2 6.28318530718
 #define Oscillator_flip 1 //1 - harmonic 0-Anharmonic
+
+using namespace std;
 
 //extern double f=0;
