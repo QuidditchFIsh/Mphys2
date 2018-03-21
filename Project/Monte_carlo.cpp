@@ -60,7 +60,7 @@ printf("Running in Anharmonic Mode\n");
 
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =2000,burn=0;
+ 	unsigned int steps =20,burn=0;
 
 
 
