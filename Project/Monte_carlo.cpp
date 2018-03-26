@@ -87,6 +87,7 @@ printf("Running in Anharmonic Mode\n");
  		}
 	}
 //run main algorithm
+	double temp1=0,temp2=0;
  	for(unsigned int i = 0; i<iterations;i++)
  	{
  		default_random_engine generator(random_device{}());
@@ -95,29 +96,44 @@ printf("Running in Anharmonic Mode\n");
  		for(unsigned int j = 0; j<length/2;j++)
  		{
  			//p[j] = distribution(generator) * ONE;
- 			p[j] = (generators[j](generator) * ONE) + (generators[j](generator) * I);
+ 			temp1 = generators[j](generator);
+ 			temp2 = generators[j](generator);
+ 			printf("(%f,%f)  ",temp1,temp2);
+ 			p[j] = (temp1 * ONE) + (temp2 * I);
  		}
 
+ 		printf("\n");
 
  		for(unsigned int j=0; j<length/2 ;j++)
 
  		{
  			p[length/2 + j] = (p[j].real() * ONE) - (p[j].imag() * I);
  		}
- 		// for(int j=0;j<length;j++)
- 		// {
- 		// 	printf("%f %f ",p[j].real(),p[j].imag());
- 		// }
- 		// printf("\n");
+
+ 		for(int j=0;j<length;j++)
+ 		{
+ 			printf("(%f,%f) ",p[j].real(),p[j].imag());
+ 		}
+ 		printf("\n");
+ 		printf("\n");
+
+ 		backwardTransform(p,length,a);
+
+ 		for(int j=0;j<length;j++)
+ 		{
+ 			printf("(%f,%f) ",p[j].real(),p[j].imag());
+ 		}
+ 		printf("\n");
+
 
 //Start the main algorithm 
  
 
- 		acceptance += hmcAlgorithm(length,t_step,1.0,steps,delta_H_Average,1.0,1.0,p,q,p_temp,q_temp,f);
- 		if(i%10 ==0)
- 		{
- 			printf("%d\n",i);
- 		}
+ 		//acceptance += hmcAlgorithm(length,t_step,1.0,steps,delta_H_Average,1.0,1.0,p,q,p_temp,q_temp,f);
+ 		// if(i%10 ==0)
+ 		// {
+ 		// 	printf("%d\n",i);
+ 		// }
 
 //perform the stats calculations for the raw data
 
