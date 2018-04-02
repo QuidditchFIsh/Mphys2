@@ -38,14 +38,14 @@ printf("Running in Harmonic Mode\n");
 printf("Running in Anharmonic Mode\n");
 #endif
 
-	// FILE * output_stats;
-	// output_stats = fopen("HMC_Stats.dat","w");
+	FILE * output_stats;
+	output_stats = fopen("HMC_Stats.dat","w");
 
-	// FILE * output_X;
-	// output_X = fopen("HMC_X.dat","w");
+	FILE * output_X;
+	output_X = fopen("HMC_X.dat","w");
 
-	// FILE * output_X1;
-	// output_X1 = fopen("HMC_Final_X.dat","w");
+	FILE * output_X1;
+	output_X1 = fopen("HMC_Final_X.dat","w");
 
 //create vectors of complex numbers one for each p and q for convience and clarity in the fourier transform 
 	vector<complex<double> > p(length,ZERO);
@@ -84,8 +84,12 @@ printf("Running in Anharmonic Mode\n");
  		}
 
 //Start the main algorithm 
- 
- 		acceptance += hmcAlgorithm(length,t_step,mu,steps,delta_H_Average,m,a,p,q,p_temp,q_temp,f);
+ 		if(i==15000)
+ 			acceptance += hmcAlgorithm(length,t_step,mu,steps,delta_H_Average,m,a,p,q,p_temp,q_temp,f,1);
+ 		else
+ 			acceptance += hmcAlgorithm(length,t_step,mu,steps,delta_H_Average,m,a,p,q,p_temp,q_temp,f,0);
+
+
 
 //perform the stats calculations for the raw data
 
@@ -99,22 +103,23 @@ printf("Running in Anharmonic Mode\n");
  		avgx +=temp_avgx;
  		avgx2 +=temp_avgx2;
  		avgx4 += temp_avgx4;
- 	// 	fprintf(output_stats,"%d %f %f %f %f %f \n",i,temp_avgx,delta_H_Average,temp_avgx2,lattice_Action(q,length,m,a,mu,lamba),lattice_KineticEnergy(p,length));
+ 	 	fprintf(output_stats,"%d %f %f %f %f %f \n",i,temp_avgx,delta_H_Average,temp_avgx2,lattice_Action(q,length,m,a,mu,lamba),lattice_KineticEnergy(p,length));
  	 	}
- 	// 	for(unsigned int l=0;l<length;l++)
-		// {
- 	// 		fprintf(output_X,"%f ",q[l].real());
- 	// 	}
- 	// 	fprintf(output_X,"\n");
+ 		for(unsigned int l=0;l<length;l++)
+		{
+ 			fprintf(output_X,"%f ",q[l].real());
+ 	 	//fprintf(output_X,"%f \n",lattice_Action(q,length,m,a,mu,0.0));
+ 		}
+ 		fprintf(output_X,"\n");
  		
 
  	}
  	
- 	// 	for(unsigned int l=0;l<length;l++)
-		// {
- 	// 		fprintf(output_X1,"%f\n",q[l].real());
- 	// 	}
- 	// 	fprintf(output_X1,"\n");
+ 		for(unsigned int l=0;l<length;l++)
+		{
+ 			fprintf(output_X1,"%f\n",q[l].real());
+ 		}
+ 		fprintf(output_X1,"\n");
 
 
  	double stdx=0,stdx2=0;
@@ -139,10 +144,12 @@ printf("Running in Anharmonic Mode\n");
 
 }
 
-double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > &p,vector<complex<double> > &q,vector<complex<double> > &p_temp,vector<complex<double> > &q_temp,double f)
+double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,vector<complex<double> > &p,vector<complex<double> > &q,vector<complex<double> > &p_temp,vector<complex<double> > &q_temp,double f,int flag)
 {
 
 	double min=0,H_old=0,H_new=0,H_inter=0;
+	if(flag)
+		steps = 5000;
 
 	vector<double> H_store(steps,0);
 
@@ -186,14 +193,15 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 #endif
 			}
 		} 
-
+		if(flag){
 		backwardTransform(q_temp,length);
 		backwardTransform(p_temp,length);
 
-		H_store[i] = lattice_Hamiltonian(p_temp,q_temp,length,mu,1.0,m,a,f);	
+		H_store[i] = lattice_Action(q_temp,length,m,a,mu,0.0);	
 
 		forwardTransform(p_temp,length);
 		forwardTransform(q_temp,length);		
+		}
 
 	}
 //half step in the p
@@ -208,12 +216,14 @@ double hmcAlgorithm(unsigned int length,double t_step,double mu,unsigned int ste
 #endif
 	}
 
-
+	if(flag)
+	{
 	FILE * output_H;
 	output_H = fopen("HMC_H","w");
 	for(int k=0;k<steps;k++)
 	{
 		fprintf(output_H,"%f\n",H_store[k]);
+	}
 	}
 //#########backward fourier transform goes here#############
 

@@ -41,6 +41,12 @@ for i in range(1,length):
 	Mavgx21.append(sum21/i)
 	variation1.append((Mavgx21[i-1] - 0.4472135955)**2)
 
+file = open("variation.dat","w")
+
+for i in range(0,length-1):
+	file.write(str(i) + " " +str(variation[i]) + " " + str(variation1[i]) + "\n")
+file.close()
+
 print("Fourier Acceleration")
 print(min(variation))
 print(max(variation))
