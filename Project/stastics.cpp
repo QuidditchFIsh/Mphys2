@@ -77,10 +77,10 @@ double lattice_Hamiltonian(vector<vector<double> > state,unsigned int length,dou
 #if Oscillator_flip
 	for(unsigned int i=0;i<length-1;i++)
 	{
-		H += Anarmonic_hamiltonian(state[0][i],state[1][i],state[1][i+1],0,lamba,m,a);
+		H += Anarmonic_hamiltonian(state[0][i],state[1][i],state[1][i+1],1,m,a,f);
 	}
 	//Periodic BC sites
-	H += Anarmonic_hamiltonian(state[0][length-1],state[1][length-1],state[1][0],0,lamba,m,a);
+	H += Anarmonic_hamiltonian(state[0][length-1],state[1][length-1],state[1][0],1,m,a,f);
 #endif
 
 	return H;
@@ -132,9 +132,9 @@ double Harmonic_action(double q, double q_plus,double m,double a,double mu)
 {
 	return ((pow((q_plus - q),2)*0.5*(m/a)) + (a*mu*0.5*q*q));
 }
+
 double Anarmonic_hamiltonian(double p,double q,double q_plus ,double lamba,double m,double a,double f)
 {
-
 	return (p*p*0.5) + (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * ((q*q) - f) * ((q*q) - f));
 }
 
@@ -142,6 +142,7 @@ double Anarmonic_action(double q, double q_plus,double m,double a,double mu,doub
 {
 	return (pow((q_plus - q),2)*0.5*(m/a)) + (a*lamba * ((q*q)-4) * ((q*q)-4));
 }
+
 double kinetic_Energy(double p)
 {
 	return (p * p * 0.5);

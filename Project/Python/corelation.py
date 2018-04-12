@@ -20,8 +20,13 @@ ones = 0; zeros = 0; twos = 0; threes = 0; fours = 0; fives = 0; sixs = 0; seven
 
 one_err = 0;two_err = 0;three_err = 0;four_err = 0;five_err = 0;six_err = 0;seven_err = 0;eight_err = 0;nine_err = 0;ten_err = 0;eleven_err = 0
 
+<<<<<<< HEAD:Project/Python/corelation.py
 length = 2000
 start = 0
+=======
+length = 10000
+start = 2000
+>>>>>>> e6ff20cffd51b7e7702506ba7729791341bf037c:Project/corelation.py
 
 
 for i in range(start,start+length):
@@ -161,17 +166,17 @@ data_err.append(sqrt((sum92  -  (sum9 * sum9))  / length))
 data_err.append(sqrt((sum102 - (sum10 * sum10)) / length))
 data_err.append(sqrt((sum112 - (sum11 * sum11)) / length))
 
-data.append((sum1))
-data.append((sum2))
-data.append((sum3))
-data.append((sum4))
-data.append((sum5))
-data.append((sum6))
-data.append((sum7))
-data.append((sum8))
-data.append((sum9))
-data.append((sum10))
-data.append((sum11))
+data.append((sum1/sum1))
+data.append((sum2/sum1))
+data.append((sum3/sum1))
+data.append((sum4/sum1))
+data.append((sum5/sum1))
+data.append((sum6/sum1))
+data.append((sum7/sum1))
+data.append((sum8/sum1))
+data.append((sum9/sum1))
+data.append((sum10/sum1))
+data.append((sum11/sum1))
 
 file = open("corelation_out.txt","w")
 

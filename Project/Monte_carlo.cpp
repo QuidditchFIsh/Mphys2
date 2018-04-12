@@ -6,7 +6,7 @@
 */
 #include "Monte_carlo.h"
 
-void lattice_Evolution(vector<vector<double> > &lattice,unsigned int length,double t_step,unsigned int iterations,double mu,double lamba,double m,double a)
+void lattice_Evolution(vector<vector<double> > &lattice,unsigned int length,double t_step,unsigned int iterations,double mu,double lamba,double m,double a,double f)
 {
 printf("##########################\n");
 printf("\n");
@@ -17,10 +17,6 @@ printf("\n");
 #if Oscillator_flip
 	printf("Running in Anharmonic Mode\n");
 #endif
-
-
-	//FILE * out;
-	//out = fopen("HMC_LeapFrog_H","w");
 
 	FILE * output_stats;
 	output_stats = fopen("HMC_Stats.dat","w");
@@ -49,8 +45,10 @@ printf("\n");
  	uniform_real_distribution<double> Udistribution(0.0,m);
 
 
+
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
  	unsigned int steps =20,burn=10000;
+
 
 
 //initalise the first state of the siulation 
@@ -75,8 +73,7 @@ printf("\n");
  		}
 
  		//Maind HMC algorithm.
- 		acceptance += hmcAlgorithm(length,t_step,State,temp_State,H_store,mu,steps,delta_H_Average,m,a);
-
+ 		acceptance += hmcAlgorithm(length,t_step,State,temp_State,H_store,mu,steps,delta_H_Average,m,a,f);
 		temp_avgx = avgX(State[1]);
 		temp_avgx2 = avg_X_Sqd(State[1]);
 		temp_avgx4 = avg_X_four(State[1]);
@@ -107,18 +104,21 @@ printf("\n");
  		}
 
 
+
  	}
+#if OutPut
  		for(unsigned int l=0;l<length;l++)
 		{
  			fprintf(output_X1,"%f ",State[1][l]);
  		}
  		fprintf(output_X1,"\n");
-
+#endif
 
  	double stdx=0,stdx2=0;
 
  	stdx  = sqrt(((avgx2/(iterations-burn)) - pow(avgx/(iterations-burn),2))/(iterations-burn-1));
  	stdx2 = sqrt(((avgx4/(iterations-burn)) - pow(avgx2/(iterations-burn),2))/(iterations-burn-1));
+
 
 //Output the Data to the Terminal To save Calcuation time in Python
  	double divide = (iterations-burn) / 100;
@@ -147,23 +147,26 @@ printf("\n");
 
 }
 
-double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &old_state,vector<vector<double> > &temp_State,vector<double> &H_store,double mu,unsigned int steps,double &delta_H_Average,double m ,double a)
+double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &old_state,vector<vector<double> > &temp_State,vector<double> &H_store,double mu,unsigned int steps,double &delta_H_Average,double m ,double a,double f)
 {
 
-	double min=0,H_old=0,H_new=0,f=3;
+
+	double min=0,H_old=0,H_new=0;
 
 	H_old=lattice_Hamiltonian(old_state,length,mu,1,m,a,f);
+
+	vector<double> H_store1(steps,0);
 
 	//half step in the p
 	#if Oscillator_flip
 
-	temp_State[0][0] = old_state[0][0] -  (0.5*t_step * Anharmonic_Potential_f(old_state[1][0],old_state[1][1],old_state[1][length-1],m,a,1,f));
+	temp_State[0][0] = old_state[0][0] -  (0.5 * t_step * Anharmonic_Potential_f(old_state[1][0],old_state[1][1],old_state[1][length-1],m,a,1,f));
 
 	#endif
 
 	#if !Oscillator_flip
 
-	temp_State[0][0] = old_state[0][0] -  (0.5*t_step * Harmonic_Potential(old_state[1][0],old_state[1][1],old_state[1][length-1],m,mu,a));
+	temp_State[0][0] = old_state[0][0] -  (0.5 * t_step * Harmonic_Potential(old_state[1][0],old_state[1][1],old_state[1][length-1],m,mu,a));
 
 	#endif
 
@@ -173,13 +176,13 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 	{
 		#if Oscillator_flip
 
-		temp_State[0][j] = old_state[0][j] - (0.5*t_step * Anharmonic_Potential_f(old_state[1][j],old_state[1][j+1],old_state[1][j-1],m,a,1,f));
+		temp_State[0][j] = old_state[0][j] - (0.5 * t_step * Anharmonic_Potential_f(old_state[1][j],old_state[1][j+1],old_state[1][j-1],m,a,1,f));
 
 		#endif
 
 		#if !Oscillator_flip
 
-		temp_State[0][j] = old_state[0][j] - (0.5*t_step * Harmonic_Potential(old_state[1][j],old_state[1][j+1],old_state[1][j-1],m,mu,a));
+		temp_State[0][j] = old_state[0][j] - (0.5 * t_step * Harmonic_Potential(old_state[1][j],old_state[1][j+1],old_state[1][j-1],m,mu,a));
 
 		#endif
 
@@ -188,13 +191,13 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 
 	#if Oscillator_flip
 
-	temp_State[0][length-1] = old_state[0][length-1] - (0.5*t_step * Anharmonic_Potential_f(old_state[1][length-1],old_state[1][0],old_state[1][length-2],m,a,1,f));
+	temp_State[0][length-1] = old_state[0][length-1] - (0.5 * t_step * Anharmonic_Potential_f(old_state[1][length-1],old_state[1][0],old_state[1][length-2],m,a,1,f));
 
 	#endif
 
 	#if !Oscillator_flip
 
-	temp_State[0][length-1] = old_state[0][length-1] - (0.5*t_step * Harmonic_Potential(old_state[1][length-1],old_state[1][0],old_state[1][length-2],m,mu,a));
+	temp_State[0][length-1] = old_state[0][length-1] - (0.5 * t_step * Harmonic_Potential(old_state[1][length-1],old_state[1][0],old_state[1][length-2],m,mu,a));
 
 	#endif
 
@@ -203,6 +206,7 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 	//full step in p and q for n steps
 	for(unsigned int i = 0;i<steps;i++)
 	{
+		H_store1[i] = lattice_Action(temp_State[1],length,1.0,1.0,1.0,0.0);
 		//update all q's
 		for(unsigned int j = 0;j<length;j++)
 		{
@@ -280,12 +284,21 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 			temp_State[0][length-1] = temp_State[0][length-1] - (0.5*t_step * Harmonic_Potential(temp_State[1][length-1],temp_State[1][0],temp_State[1][length-2],m,mu,a));
 
 			#endif
+
 	H_new = lattice_Hamiltonian(temp_State,length,mu,1,m,a,f);
 
+	FILE* out_H;
+	out_H = fopen("HMC_Action","w");
+
+	for(int k=0;k<steps;k++)
+	{
+		fprintf(out_H,"%f\n",H_store1[k]);
+	}
 	//metroplis update
 	double r = ((double) rand() / (RAND_MAX));
 
 	min = (1 < exp(H_old - H_new)) ? 1 : exp(H_old - H_new);
+
 	if(r < min)
 	{
 		//accept
@@ -300,6 +313,7 @@ double hmcAlgorithm(unsigned int length,double t_step,vector<vector<double> > &o
 		return 1;
 		
 	}
+
 	delta_H_Average = H_old - H_new;
 
 	return 0;
