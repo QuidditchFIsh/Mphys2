@@ -50,7 +50,7 @@ printf("\n");
 
 
  	double acceptance =0,delta_H_Average=0,avgx=0,avgx2=0,error_x2=0,temp_avgx=0,temp_avgx2=0,temp_avgx4=0,avgx4=0,dH_avg=0;
- 	unsigned int steps =20,burn=0;
+ 	unsigned int steps =20,burn=10000;
 
 
 //initalise the first state of the siulation 
@@ -84,20 +84,28 @@ printf("\n");
 
 		if(i>burn)
 		{
+			if(i % 10 == 0)
+			{
+ 			avgx +=temp_avgx;
+ 			avgx2 +=temp_avgx2;
+ 			avgx4 += temp_avgx4;
 
- 		avgx +=temp_avgx;
- 		avgx2 +=temp_avgx2;
- 		avgx4 += temp_avgx4;
+ 			fprintf(output_stats,"%d %f %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length),temp_avgx4);
+ 			}
 
-
- 		fprintf(output_stats,"%d %f %f %f %f %f %f %f\n",i,temp_avgx,delta_H_Average,temp_avgx2,error_x2,lattice_Action(State[1],length,m,a,mu,lamba),lattice_KineticEnergy(State[0],length),temp_avgx4);
-
+ 			if(i > 20000)
+	 		{
+	 			if(i % 10 == 0)
+	 			{
+	 				for(unsigned int l=0;l<length;l++)
+					{
+	 					fprintf(output_X,"%f ",State[1][l]);
+	 				}
+	 				fprintf(output_X,"\n");
+	 			}
+	 		}
  		}
- 		for(unsigned int l=0;l<length;l++)
-		{
- 			//fprintf(output_X,"%f ",State[1][l]);
- 		}
- 		fprintf(output_X,"\n");
+
 
  	}
  		for(unsigned int l=0;l<length;l++)
@@ -113,13 +121,14 @@ printf("\n");
  	stdx2 = sqrt(((avgx4/(iterations-burn)) - pow(avgx2/(iterations-burn),2))/(iterations-burn-1));
 
 //Output the Data to the Terminal To save Calcuation time in Python
+ 	double divide = (iterations-burn) / 100;
  	printf("########## Data ##########\n");
  	printf("\n");
  	printf("Acceptance: %f%%\n",(acceptance*100)/(double) iterations);
  	printf("The Average Delta H was %f\n",dH_avg/iterations);
- 	printf("Average x:	%f +/-%f\n",avgx/(iterations-burn),stdx);
- 	printf("Average x^2: %f +/-%f\n",avgx2/(iterations-burn),stdx2);
- 	printf("Average x^4: %f\n",avgx4/(iterations-burn));
+ 	printf("Average x:	%f +/-%f\n",avgx/divide,stdx);
+ 	printf("Average x^2: %f +/-%f\n",avgx2/divide,stdx2);
+ 	printf("Average x^4: %f\n",avgx4/divide);
  	double GroundState=0;
 
 #if Oscillator_flip

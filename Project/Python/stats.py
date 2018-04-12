@@ -24,7 +24,7 @@ sum1=0;sum2=0;sum3=0;sum4=0;sum5=0;sum6=0
 sum12=0;sum22=0;sum32=0;sum42=0;sum52=0;sum62=0
 
 #import all data from the file
-file  = open("HMC_Stats.dat",'r')
+file  = open("HMC_Stats_0.05.dat",'r')
 #file1 = open("HMC_X.dat","r")
 
 for line in file:
@@ -92,6 +92,7 @@ data=[]
 std1=[]
 std2=[]
 l=7
+'''
 for j in range(0,l):
 	for i in range(4000,iter-j):
 		temp1=(avgx[i]-mean)*(avgx[i+j]-mean)
@@ -107,7 +108,7 @@ for j in range(0,l):
 	sum1=0
 	std1=[]
 	std2=[]
-
+'''
 #####################END SECTION##########################
 
 #######################ERROR ANALYSIS#######################
@@ -115,8 +116,8 @@ xerr  = []
 x2err = []
 
 for j in range(2,len(avgx)-1):
-	xerr.append(sqrt((Mavgx2[i] - (Mavgx[i] * Mavgx[i]))/(j-1)))
-	x2err.append(sqrt((Mavgx4[i] - (Mavgx2[i] * Mavgx2[i]))/(j-1)))
+	xerr.append(sqrt((Mavgx2[j] - (Mavgx[j] * Mavgx[j]))/(j-1)))
+	x2err.append(sqrt((Mavgx4[j] - (Mavgx2[j] * Mavgx2[j]))/(j-1)))
 
 
 ###########################END SECTION##############################
@@ -224,13 +225,13 @@ if(oscillator_flip==1):
 	m.savefig("graphs/Average_DeltaH_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	m.savefig("graphs/Average_DeltaH_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
-
+'''
 n=plt.figure()
 #w = 1.00124922
 #x = np.linspace(-3,3,200) # 100 linearly spaced numbers
 #y = ((w/(3.141592654))**0.5)*np.exp(-w*(x**2))
 #plt.plot(x,y)
-plt.hist(dataX,bins=100,normed=1)
+plt.hist(dataX,bins=50,normed=1)
 plt.xlabel("x")
 plt.ylabel("|psi|^2")
 plt.title("Anharmonic Wavefunction for mu=-4 lamba =0.1")
@@ -238,6 +239,6 @@ if(oscillator_flip==1):
 	n.savefig("graphs/Average_Wavefunction_Harmonic_"+str(iter) +"_"+str(length)+"_"+str(mu)+".pdf")
 else:
 	n.savefig("graphs/Average_Wavefunction_Anharmonic_"+str(iter) +"_"+str(length)+"_"+str(f)+".pdf")
-
+'''
 
 ############################END SECTION######################################

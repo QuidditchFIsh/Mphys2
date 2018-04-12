@@ -9,7 +9,6 @@ import statistics
 
 data=[]
 data_err=[]
-length=1
 
 zero = 0;one = 0;two = 0;three = 0;four = 0;five = 0;six = 0;seven = 0;eight = 0;nine = 0;ten = 0
 
@@ -21,8 +20,8 @@ ones = 0; zeros = 0; twos = 0; threes = 0; fours = 0; fives = 0; sixs = 0; seven
 
 one_err = 0;two_err = 0;three_err = 0;four_err = 0;five_err = 0;six_err = 0;seven_err = 0;eight_err = 0;nine_err = 0;ten_err = 0;eleven_err = 0
 
-length = 50000
-start = 4000
+length = 2000
+start = 0
 
 
 for i in range(start,start+length):
@@ -177,7 +176,7 @@ data.append((sum11))
 file = open("corelation_out.txt","w")
 
 for i in range(0,len(data)):
-	file.write(str(data[i]) + " " + str(data_err[i]) + "\n")
+	file.write(str(i) + ' ' + str(data[i]) + " " + str(data_err[i]) + "\n")
 
 file.close()
 
